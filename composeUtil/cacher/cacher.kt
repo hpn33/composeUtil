@@ -11,7 +11,7 @@ data class Observable<T : Any?>(
     val key: String,
     val action: () -> Any?,
 ) {
-    lateinit var dbObservable: ActionCache
+    lateinit var dbObservable: ActionCatcher
     var state: MutableState<T?> = mutableStateOf(null)
 
     init {
@@ -55,7 +55,7 @@ data class Observable<T : Any?>(
 
 }
 
-class ActionCache {
+class ActionCatcher {
 
     private val observers: MutableList<Observable<Any>> = mutableListOf()
 
