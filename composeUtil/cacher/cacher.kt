@@ -1,4 +1,4 @@
-package composeUtil.observe
+package composeUtil.cacher
 
 import androidx.compose.runtime.*
 
@@ -7,13 +7,11 @@ import androidx.compose.runtime.*
 // - [ ] multi table act -withDep
 // - [ ] split the where use and what use ( location and action key )
 
-// TODO: rename to Observe Catch
-
 data class Observable<T : Any?>(
     val key: String,
     val action: () -> Any?,
 ) {
-    lateinit var dbObservable: DBObserver
+    lateinit var dbObservable: ActionCache
     var state: MutableState<T?> = mutableStateOf(null)
 
     init {
@@ -55,62 +53,20 @@ data class Observable<T : Any?>(
         dbObservable.remove(key)
     }
 
-
-//    @Composable
-//    inline fun hookComposeDisposable(): T? {
-//        // TODO: test -maybe not need to update func
-//        var data by remember { state }
-//
-//        DisposableEffect(Unit) {
-//
-////            println("default")
-////            data = value
-//
-//            onChange {
-////                println("onValue Changed")
-//                data = it
-//            }
-//
-//            onDispose {
-////                println("disposed")
-//                free()
-//            }
-//
-//        }
-//
-//        return data
-//
-//    }
-
-//    @Composable
-//    inline fun hookCompose(): T? {
-//        // TODO: test -maybe not need to update func
-//        var data by remember { state }
-//
-//        LaunchedEffect(Unit) {
-//
-////            println("default")
-////            data = value
-//
-//            onChange {
-////                println("onValue Changed")
-//                data = it
-//            }
-//
-//        }
-//
-//        return data
-//
-//    }
-
 }
 
-class DBObserver {
+class ActionCache {
 
-    private val observers: MutableList<Observable<Any?>> = mutableListOf()
+    private val observers: MutableList<Observable<Any>> = mutableListOf()
 
-    fun <T> observe(key: String, action: () -> T): Observable<T> {
+    // table@action(parameters)
+    fun <T> actPoint(key: String, action: () -> T): Observable<T> {
 
+        return getOrCreatePoint(key, action)
+
+    }
+
+    private fun <T> getOrCreatePoint(key: String, action: () -> T): Observable<T> {
         var observable = observers.find { it.key == key }
 
         val wasNotExist = observable == null
@@ -118,7 +74,6 @@ class DBObserver {
         if (wasNotExist) {
             observable = Observable(key, action)
             observable.dbObservable = this
-//            observable.tags.addAll(tag)
 
             observers.add(observable)
         }
@@ -128,6 +83,7 @@ class DBObserver {
 
         return observable as Observable<T>
     }
+
 
     fun signal(targetKeys: List<String> = listOf()) {
 
