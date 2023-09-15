@@ -1,49 +1,51 @@
 package composeUtil.cacher
 
+import androidx.compose.runtime.*
 
-//    @Composable
-//    inline fun hookComposeDisposable(): T? {
-//        // TODO: test -maybe not need to update func
-//        var data by remember { state }
+
+//@Composable
+//inline fun <T> Observable<T>.hookComposeDisposable(): T? {
+//    // TODO: test -maybe not need to update func
+//    var data by remember { state }
 //
-//        DisposableEffect(Unit) {
+//    DisposableEffect(Unit) {
 //
 ////            println("default")
 ////            data = value
 //
-//            onChange {
+//        onChange {
 ////                println("onValue Changed")
-//                data = it
-//            }
+//            data = it
+//        }
 //
-//            onDispose {
+//        onDispose {
 ////                println("disposed")
-//                free()
-//            }
-//
+//            free()
 //        }
 //
-//        return data
-//
 //    }
-
-//    @Composable
-//    inline fun hookCompose(): T? {
-//        // TODO: test -maybe not need to update func
-//        var data by remember { state }
 //
-//        LaunchedEffect(Unit) {
+//    return data
+//
+//}
+
+//@Composable
+//inline fun <T> Observable<T>.hookCompose(): T? {
+//    // TODO: test -maybe not need to update func
+//    var data by remember { state }
+//
+//    LaunchedEffect(Unit) {
 //
 ////            println("default")
 ////            data = value
 //
-//            onChange {
+//        onChangeAndDo {
 ////                println("onValue Changed")
-//                data = it
-//            }
-//
+//            data = it
 //        }
 //
-//        return data
-//
 //    }
+//
+//    return data
+//
+//}

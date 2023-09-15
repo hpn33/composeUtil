@@ -125,7 +125,7 @@ inline fun <S, VM : ViewModel<S>> useVM(viewModel: VM): Pair<VM, S> {
 //}
 
 
-abstract class ViewModel<T>(init: T)  {
+abstract class ViewModel<T>(init: T) {
 
 
     protected val vmScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
@@ -151,4 +151,9 @@ abstract class ViewModel<T>(init: T)  {
             _state.update { action(it) }
         }
     }
+
+    protected fun setStateAsync(action: (T) -> T) {
+        _state.update { action(it) }
+    }
+
 }

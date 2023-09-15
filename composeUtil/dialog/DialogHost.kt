@@ -8,9 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.rememberDialogState
+import androidx.compose.ui.window.*
 import composeUtil.dialog.DialogService.getController
 import composeUtil.dialog.component.DialogOverlayBase
 import composeUtil.dialog.model.DialogOverlayWidget
@@ -56,21 +54,21 @@ fun DialogWindowWidget.show() {
 
 
     val controller = getController()
-    val dialogState = rememberDialogState(width = controller.width, height = controller.height)
+//    val dialogState = rememberDialogState(width = controller.width, height = controller.height)
 
+
+    Dialog({}, DialogProperties()) {
+
+    }
 
     Dialog(
-        title = controller.title,
-        state = dialogState,
-        onCloseRequest = controller::close,
+        controller::close,
+        DialogProperties()
+//        state = dialogState,
+//        title = controller.title,
     ) {
 
-//        DialogWindowBase {
-
         content(controller)
-
-//        }
-
     }
 
 }
@@ -86,7 +84,11 @@ fun DialogOverlayWidget.show() {
     Popup(
         alignment = Alignment.Center,
         onDismissRequest = controller::close,
-        focusable = true
+        properties = PopupProperties(
+            focusable = true
+        ),
+//        onPreviewKeyEvent = { false },
+//        onKeyEvent = { false }
     ) {
 
         DialogOverlayBase {

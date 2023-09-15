@@ -47,7 +47,7 @@ inline fun <T> useFetch(
 @Composable
 inline fun <T> useFetchList(
     initValue: List<T> = listOf(),
-    crossinline function: CoroutineScope.() -> List<T>
+    crossinline function: suspend CoroutineScope.() -> List<T>
 ): List<T> {
     var state by remember { mutableStateOf(initValue) }
 

@@ -6,12 +6,13 @@ import androidx.compose.runtime.*
 // - [x] signal - observer
 // - [ ] multi table act -withDep
 // - [ ] split the where use and what use ( location and action key )
+// - [ ] hook to location and be disposed
 
 data class Observable<T : Any?>(
     val key: String,
     val action: () -> Any?,
 ) {
-    lateinit var dbObservable: ActionCatcher
+    lateinit var actionCatcher: ActionCatcher
     var state: MutableState<T?> = mutableStateOf(null)
 
     init {
@@ -50,7 +51,7 @@ data class Observable<T : Any?>(
     }
 
     fun free() {
-        dbObservable.remove(key)
+        actionCatcher.remove(key)
     }
 
 }
@@ -60,6 +61,10 @@ class ActionCatcher {
     private val observers: MutableList<Observable<Any>> = mutableListOf()
 
     // table@action(parameters)
+//    operator fun <T> invoke(key: String, action: () -> T) =
+//        actPoint(key, action)
+
+
     fun <T> actPoint(key: String, action: () -> T): Observable<T> {
 
         return getOrCreatePoint(key, action)
@@ -73,7 +78,7 @@ class ActionCatcher {
 
         if (wasNotExist) {
             observable = Observable(key, action)
-            observable.dbObservable = this
+            observable.actionCatcher = this
 
             observers.add(observable)
         }
@@ -83,6 +88,16 @@ class ActionCatcher {
 
         return observable as Observable<T>
     }
+
+
+//    // as signal
+//    operator fun invoke(targetKey: String) = signal(targetKey)
+//
+//    // as signal
+//    operator fun invoke(targetKeys: List<String> = listOf()) = signal(targetKeys)
+//
+//    // as signal
+//    operator fun invoke(vararg targetKeys: String) = signal(*targetKeys)
 
 
     fun signal(targetKeys: List<String> = listOf()) {
@@ -105,6 +120,7 @@ class ActionCatcher {
     }
 
     fun signal(targetKey: String) = signal(listOf(targetKey))
+    fun signal(vararg targetKey: String) = signal(listOf(*targetKey))
 
 
     fun remove(key: String) {
