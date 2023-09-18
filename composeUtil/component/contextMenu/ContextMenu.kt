@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import composeUtil.animation.AnimatedVisibilityAfter
 import composeUtil.state.useState
+import dateUtil.date.kotlinx.nowLocalDateX
 import java.time.LocalDate
 import kotlin.random.Random
 
@@ -32,6 +33,7 @@ val contextMenuOpenKey = mutableStateOf("")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 inline fun ContextMenu(
+    key: Any? = null,
     crossinline menu: @Composable (() -> Unit) -> Unit,
     crossinline menuBuilder: @Composable (@Composable () -> Unit) -> Unit =
         { DefaultContentBuilder { it() } },
@@ -41,15 +43,15 @@ inline fun ContextMenu(
 ) {
 
     val key by useState(
-        LocalDate.now().toString()
+        key.toString()
                 + Random.nextInt(100).toString()
+                + nowLocalDateX().toString()
                 + Random.nextInt(100).toString()
     )
 
     var openedKey by remember { contextMenuOpenKey }
 
     val toggle = openedKey == key
-
 
     Box(modifier) {
 

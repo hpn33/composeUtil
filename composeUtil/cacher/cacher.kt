@@ -11,8 +11,9 @@ import androidx.compose.runtime.*
 data class Observable<T : Any?>(
     val key: String,
     val action: () -> Any?,
+    private val actionCatcher: ActionCatcher
 ) {
-    lateinit var actionCatcher: ActionCatcher
+
     var state: MutableState<T?> = mutableStateOf(null)
 
     init {
@@ -54,7 +55,20 @@ data class Observable<T : Any?>(
         actionCatcher.remove(key)
     }
 
+
+    fun localUse(key: Any): Observable<T> {
+        val localKey = this.key + ".local" + key
+
+        return actionCatcher.getOrCreatePoint(localKey) { this.action() as T }
+    }
+
 }
+
+
+class LocalObservable {
+
+}
+
 
 class ActionCatcher {
 
@@ -71,14 +85,13 @@ class ActionCatcher {
 
     }
 
-    private fun <T> getOrCreatePoint(key: String, action: () -> T): Observable<T> {
+    fun <T> getOrCreatePoint(key: String, action: () -> T): Observable<T> {
         var observable = observers.find { it.key == key }
 
         val wasNotExist = observable == null
 
         if (wasNotExist) {
-            observable = Observable(key, action)
-            observable.actionCatcher = this
+            observable = Observable(key, action, this)
 
             observers.add(observable)
         }
