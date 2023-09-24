@@ -6,23 +6,16 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import dateUtil.date.kotlinx.nowX
 import dateUtil.date.kotlinx.toLocalDateTimeX
+import kotlinx.datetime.Instant
 
 
 // convert
-// civil
-inline fun LocalDateTime.toCivil() = toPrimeCalendar().toCivil()
-inline fun LocalDate.toCivil() = toLocalDateTimeX().toCivil()
-
 
 // persion
-inline fun LocalDateTime.toPersian() = toPrimeCalendar().toPersian()
-inline fun LocalDate.toPersian() = toLocalDateTimeX().toPersian()
+inline fun Instant.toPersian() = toPrimeCivil().toPersian()
+inline fun LocalDateTime.toPersian() = toPrimeCivil().toPersian()
+inline fun LocalDate.toPersian() = toPrimeCivil().toPersian()
 
-
-// now
-inline fun nowPersian() = nowX().toPersian()
-
-inline fun nowCivil() = nowX().toCivil()
 
 
 // make

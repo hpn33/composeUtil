@@ -1,18 +1,18 @@
 package composeUtil.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import composeUtil.state.useState
-import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -91,7 +91,6 @@ inline fun AutoScaleBox(
 //    println("$scaleX (${contentWidth * scaleX})")
 
 
-
     Box(
         modifier
             .fillMaxSize()
@@ -149,13 +148,18 @@ inline fun WidthScaleBox(
 //    var cacheContentWidth by useState(0f)
 
 
-    var wantedWidth by useState(0f)
+    var frameWidth by useState(0f)
 
     var contentWidth by useState(0f)
     var contentHeight by useState(0f)
 
 //    var scaleX by useState(1f)
-    val scaleX = (wantedWidth / contentWidth).let { if (it.isInfinite() || it.isNaN()) 1f else it }
+    val scaleX = (frameWidth / contentWidth).let { if (it.isInfinite() || it.isNaN()) 1f else it }
+
+//    println("//////////////////")
+//    println("frame: " + frameWidth)
+//    println("content: " + contentWidth)
+//    println("scale: " + scaleX)
 
 //    LaunchedEffect(cacheContentWidth == 0f) {
 ////        delay(cacheDelay)
@@ -182,7 +186,7 @@ inline fun WidthScaleBox(
             .fillMaxSize()
 //            .background(Color.Red)
             .onSizeChanged {
-                wantedWidth = it.width.toFloat()
+                frameWidth = it.width.toFloat()
             }
     ) {
 
@@ -191,13 +195,16 @@ inline fun WidthScaleBox(
                 (contentWidth * scaleX).dp,
                 (contentHeight * scaleX).dp
             )
+//                    .background(Color.Green)
+            ,
+            contentAlignment = Alignment.Center
         ) {
             Box(
                 Modifier
-                    .wrapContentSize(
-                        unbounded = true
-                    )
                     .scale(scaleX)
+                    .wrapContentSize(
+                        unbounded = true,
+                    )
 //                    .background(Color.Blue)
             ) {
 
@@ -257,7 +264,6 @@ inline fun HeightScaleBox(
 //    }
 
 
-
     Box(
         modifier
             .fillMaxSize()
@@ -271,7 +277,8 @@ inline fun HeightScaleBox(
             Modifier.size(
                 (contentWidth * scaleY).dp,
                 (contentHeight * scaleY).dp
-            )
+            ),
+            contentAlignment = Alignment.Center
         ) {
             Box(
                 Modifier
