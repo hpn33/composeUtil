@@ -3,9 +3,7 @@ package composeUtil
 /**
  *
  * last project change: routine
- * 2023-09-20
+ * 2023-09-26
  *
- * catcher: hook compose - disposable
- * layout: space
- * autoScaleBox
+ * rememberPrevCheck
  */
