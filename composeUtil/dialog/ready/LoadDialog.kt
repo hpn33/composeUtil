@@ -1,2 +1,0 @@
-package composeUtil.dialog.ready
-
