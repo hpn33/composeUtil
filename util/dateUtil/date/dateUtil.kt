@@ -2,8 +2,8 @@ package util.dateUtil.date
 
 import com.aminography.primecalendar.persian.PersianCalendar
 import kotlinx.datetime.Instant
-import dateUtil.date.kotlinx.nowInstantX
-import dateUtil.date.prime.toPrimeCivil
+import util.dateUtil.date.kotlinx.nowInstantX
+import util.dateUtil.date.prime.toPrimeCivil
 import kotlin.time.Duration.Companion.days
 
 // java.date -> kotlinx

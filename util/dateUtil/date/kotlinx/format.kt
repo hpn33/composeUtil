@@ -1,8 +1,8 @@
 package util.dateUtil.date.kotlinx
 
 import com.aminography.primecalendar.PrimeCalendar
-import dateUtil.date.java.nowJ
-import dateUtil.date.prime.getNormalNumericDate
+import util.dateUtil.date.java.nowJ
+import util.dateUtil.date.prime.getNormalNumericDate
 import kotlinx.datetime.*
 import java.time.Period
 

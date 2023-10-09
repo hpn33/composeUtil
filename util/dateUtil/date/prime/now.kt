@@ -1,6 +1,6 @@
 package util.dateUtil.date.prime
 
-import dateUtil.date.kotlinx.nowX
+import util.dateUtil.date.kotlinx.nowX
 
 
 // now

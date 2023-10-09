@@ -1,7 +1,7 @@
 package util.dateUtil.date.kotlinx
 
 import kotlinx.datetime.*
-import dateUtil.date.convert.toLocalDateX
+import util.dateUtil.date.convert.toLocalDateX
 
 // instant -> ?
 inline fun Instant.toLocalDateTimeX() = toLocalDateTime(TimeZone.currentSystemDefault())

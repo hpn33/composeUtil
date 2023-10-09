@@ -1,6 +1,6 @@
 package util.dateUtil.date.kotlinx
 
-import dateUtil.date.convert.toLocalDateX
+import util.dateUtil.date.convert.toLocalDateX
 import kotlinx.datetime.Clock
 
 

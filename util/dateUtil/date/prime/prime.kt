@@ -3,10 +3,10 @@ package util.dateUtil.date.prime
 import com.aminography.primecalendar.PrimeCalendar
 import com.aminography.primecalendar.civil.CivilCalendar
 import com.aminography.primecalendar.persian.PersianCalendar
-import dateUtil.date.kotlinx.toInstantX
+import util.dateUtil.date.kotlinx.toInstantX
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
-import dateUtil.date.kotlinx.toLocalDateTimeX
+import util.dateUtil.date.kotlinx.toLocalDateTimeX
 import kotlinx.datetime.LocalDate
 import java.util.*
 
