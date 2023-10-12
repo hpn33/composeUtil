@@ -1,37 +1,72 @@
 package util
 
 import okio.FileSystem
+import okio.IOException
+import okio.Path.Companion.toOkioPath
 import okio.Path.Companion.toPath
+import java.io.File
 
-fun deleteIo(dir: String) {
 
-    if (!FileSystem.SYSTEM.exists(dir.toPath())) return
+fun okioPathExists(filePath: String) =
+    okioPathExists(File(filePath))
 
-    FileSystem.SYSTEM.deleteRecursively(dir.toPath(), true)
-}
+fun okioPathExists(filePath: File) =
+    FileSystem.SYSTEM.exists(filePath.toOkioPath())
 
-fun makeDir(dir: String) {
+fun okioDelete(dir: String): Boolean? {
 
-    if (FileSystem.SYSTEM.exists(dir.toPath())) return
+    if (!okioPathExists(dir)) {
+        return false
+    }
 
-    FileSystem.SYSTEM.createDirectory(dir.toPath())
-}
 
-fun makeFile(dir: String, fileName: String, content: String = "") {
+    return try {
 
-    val mustCreate = !FileSystem.SYSTEM.exists(dir.toPath())
+        FileSystem.SYSTEM.deleteRecursively(dir.toPath(), true)
 
-    FileSystem.SYSTEM.write(
-        file = ("$dir/$fileName").toPath(),
-        mustCreate = mustCreate
-    ) {
-        writeUtf8(content)
+        true
+    } catch (e: IOException) {
+        null
     }
 }
 
-object OkioUtil {
+fun okioMakeDir(dir: String) = okioMakeDir(File(dir))
+fun okioMakeDir(dir: File): Boolean? {
 
-    fun pathExists(filePath: String) =
-        FileSystem.SYSTEM.exists(filePath.toPath())
+    if (okioPathExists(dir)) {
+        return false
+    }
 
+
+    return try {
+
+        FileSystem.SYSTEM.createDirectory(dir.toOkioPath())
+
+        true
+
+    } catch (e: IOException) {
+        null
+    }
 }
+
+fun okioMakeFile(dir: String, fileName: String, content: String = ""): Boolean {
+
+    val mustCreate = !okioPathExists(dir)
+
+    return try {
+
+        FileSystem.SYSTEM.write(
+            file = ("$dir/$fileName").toPath(),
+            mustCreate = mustCreate
+        ) {
+            writeUtf8(content)
+        }
+
+        true
+    } catch (e: IOException) {
+        false
+    }
+}
+
+
+
