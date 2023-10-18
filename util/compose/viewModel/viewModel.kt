@@ -56,7 +56,7 @@ inline fun <S, VM : ViewModel<S>> useVM(key: Any, viewModel: VM): Pair<VM, S> {
     val vm = remember(key) { viewModel }
     val state by vm.hookState()
 
-    vm.composeHook()
+    vm.composeHook(state)
 
     DisposableEffect(key) {
 
@@ -80,7 +80,7 @@ inline fun <S, VM : ViewModel<S>> useVM(viewModel: VM): Pair<VM, S> {
     val vm = remember { viewModel }
     val state by vm.hookState()
 
-    vm.composeHook()
+    vm.composeHook(state)
 
     DisposableEffect(Unit) {
 
@@ -131,7 +131,7 @@ abstract class ViewModel<T>(init: T) {
     protected val vmScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 
     @Composable
-    open fun composeHook() {
+    open fun composeHook(state: T) {
     }
 
     open fun init() {}
