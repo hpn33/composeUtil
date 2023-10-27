@@ -6,7 +6,7 @@ import hpn.routine.Database
 
 fun migrateIfNeeded(
     driver: SqlDriver,
-    newVersion: Long = Database.Schema.version,
+    newVersion: Long,
     migrateAct: (SqlDriver, Long, Long) -> Unit
 ) {
 
@@ -40,9 +40,14 @@ fun SqlDriver.setDbVersion(newVersion: Long) =
 
 
 fun SqlDriver.getDbVersion() =
-    executeQuery(
-        null,
-        "PRAGMA $versionPragma",
-        { QueryResult.Value(it.getLong(0)) },
-        0
-    ).value
+    try {
+        executeQuery(
+            null,
+            "PRAGMA $versionPragma",
+            { QueryResult.Value(it.getLong(0)) },
+            0
+        ).value
+    } catch (e: Exception) {
+        null
+    }
+

@@ -136,7 +136,15 @@ abstract class ViewModel<T>(init: T) {
 
     open fun init() {}
 
-    open fun dispose() {}
+
+    protected val disposeActions: MutableList<() -> Unit> = mutableListOf()
+    fun onDispose(action: () -> Unit) {
+        disposeActions.add(action)
+    }
+
+    open fun dispose() {
+        disposeActions.forEach { it() }
+    }
 
 
     private val _state = MutableStateFlow(init)

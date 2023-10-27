@@ -107,28 +107,43 @@ class ActionCatcher {
 //    // as signal
 //    operator fun invoke(vararg targetKeys: String) = signal(*targetKeys)
 
-
-    fun signal(targetKeys: List<String> = listOf()) {
-
-        println("signal>> $targetKeys")
-        // act to reacts
+    fun signal(targetKeys: List<String> = listOf(), filterAction: (Observable<Any>) -> Boolean) {
 
 
         // signal to targets
         var observables = observers.toList()
 
         if (targetKeys.isNotEmpty()) {
-            observables = observables
-                .filter { item ->
-                    targetKeys.any { targetKey -> item.key.contains(targetKey) }
-                }
+            observables = observables.filter(filterAction)
         }
 
         observables.forEach { it.renewValue() }
     }
 
-    fun signal(targetKey: String) = signal(listOf(targetKey))
-    fun signal(vararg targetKey: String) = signal(listOf(*targetKey))
+
+    fun signalToHaveAnyKey(targetKeys: List<String> = listOf()) {
+
+        println("signal[to have any]>> $targetKeys")
+
+        signal(targetKeys) { item -> targetKeys.any { targetKey -> item.key.contains(targetKey) } }
+
+    }
+
+    fun signalToHaveAnyKey(targetKey: String) = signalToHaveAnyKey(listOf(targetKey))
+    fun signalToHaveAnyKey(vararg targetKey: String) = signalToHaveAnyKey(listOf(*targetKey))
+
+
+    fun signalToHaveAllKey(targetKeys: List<String> = listOf()) {
+
+        println("signal[to have all]>> $targetKeys")
+
+        // act to reacts
+        signal(targetKeys) { item -> targetKeys.all { targetKey -> item.key.contains(targetKey) } }
+
+    }
+
+    fun signalToHaveAllKey(targetKey: String) = signalToHaveAllKey(listOf(targetKey))
+    fun signalToHaveAllKey(vararg targetKey: String) = signalToHaveAllKey(listOf(*targetKey))
 
 
     fun remove(key: String) {
