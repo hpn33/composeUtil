@@ -28,10 +28,15 @@ data class Observable<T : Any?>(
         return this
     }
 
+    private var localIsExist = true
+    val isExist: Boolean
+        get() = localIsExist
 
     private val actions: MutableList<(T?) -> Unit> = mutableListOf()
 
     fun changeValue(action: Any?) {
+
+        if (!isExist) return
 
         state.value = action as T?
 
@@ -49,6 +54,8 @@ data class Observable<T : Any?>(
 
         onChange(function)
 
+        if (!isExist) return
+
         function(state.value)
 
     }
@@ -61,6 +68,10 @@ data class Observable<T : Any?>(
 
     fun free() {
         actionCatcher.remove(key)
+    }
+
+    fun removeFromActionCenter() {
+        localIsExist = false
     }
 
 
@@ -158,7 +169,11 @@ class ActionCatcher {
 
         println("observe:d> $key")
 
-        observers.removeIf { it.key == key }
+        val observer = observers.find { it.key == key }
+
+        observers.remove(observer)
+
+        observer?.removeFromActionCenter()
     }
 
 }
