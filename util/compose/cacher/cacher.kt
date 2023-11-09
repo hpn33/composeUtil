@@ -21,6 +21,14 @@ data class Observable<T : Any?>(
     }
 
 
+    // two type of exe point one without change - one with change
+    operator fun invoke(): Observable<T> {
+        renewValue()
+
+        return this
+    }
+
+
     private val actions: MutableList<(T?) -> Unit> = mutableListOf()
 
     fun changeValue(action: Any?) {
