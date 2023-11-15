@@ -1,4 +1,4 @@
-package util
+package util.color
 
 import androidx.compose.ui.graphics.Color
 
