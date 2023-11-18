@@ -40,14 +40,17 @@ fun <T> CrossSlideHorizontal(
 
     if (targetChanged || items.isEmpty()) {
         // Only manipulate the list when the state is changed, or in the first run.
-        val keys = items.map { it.key }.run {
-            if (!contains(targetState)) {
-                toMutableList().also { it.add(targetState) }
-            } else {
-                this
+        val keys = items.map { it.key }
+            .run {
+                if (!contains(targetState)) {
+                    toMutableList().also { it.add(targetState) }
+                } else {
+                    this
+                }
             }
-        }
+
         items.clear()
+
         keys.mapTo(items) { key ->
 
             SlideInOutAnimationState(key) {
@@ -69,6 +72,7 @@ fun <T> CrossSlideHorizontal(
                 }
             }
         }
+
     } else if (transitionState.currentState == transitionState.targetState) {
         // Remove all the intermediate items from the list once the animation is finished.
         items.removeAll { it.key != transitionState.targetState }
