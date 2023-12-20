@@ -6,7 +6,7 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 
 
-object FieldFactorScope {
+class FieldFactorScope {
 
     val fields = mutableListOf<String>()
 
@@ -23,7 +23,10 @@ object FieldFactorScope {
 
 fun SqlDriver.createTable(table: String, fieldFactor: FieldFactorScope.() -> Unit): QueryResult<Long> {
 
-    val fields = FieldFactorScope.fields.joinToString { it }
+    val scope = FieldFactorScope()
+    scope.fieldFactor()
+
+    val fields = scope.fields.joinToString { it }
 
     return execute(null, "CREATE TABLE IF NOT EXISTS $table ($fields);", 0)
 }
