@@ -1,53 +1,32 @@
 package util.sqldelight
 
+import app.cash.sqldelight.Query
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
-import hpn.routine.Database
-
-fun migrateIfNeeded(
-    driver: SqlDriver,
-    newVersion: Long,
-    migrateAct: (SqlDriver, Long, Long) -> Unit
-) {
-
-    val oldVersion = driver.getDbVersion() ?: 0
-
-    println("DB:version = $oldVersion")
-
-    if (oldVersion == 0L) {
-
-        println("Creating DB version $newVersion!")
-        Database.Schema.create(driver)
-
-        driver.setDbVersion(newVersion)
 
 
-    } else if (oldVersion < newVersion) {
+private const val versionPragma = "user_version"
+//private const val versionPragma = "dbver"
 
-        println("Migrating DB from version $oldVersion to $newVersion!")
-        migrateAct(driver, oldVersion, newVersion)
+fun SqlDriver.setDbVersion(newVersion: Long): QueryResult<Long>? {
+    println("the db version $newVersion")
+    return try {
 
-        driver.setDbVersion(newVersion)
-
+        Query(0, this, "PRAGMA $versionPragma=$newVersion;") { QueryResult.Value(0L) }
+            .executeAsOne()
+    } catch (e: Exception) {
+        println(e)
+        null
     }
 }
 
 
-private const val versionPragma = "user_version"
-
-fun SqlDriver.setDbVersion(newVersion: Long) =
-    execute("PRAGMA $versionPragma=$newVersion")
-
-
 fun SqlDriver.getDbVersion() =
     try {
-        executeQuery(
-            null,
-            "PRAGMA $versionPragma",
-            { QueryResult.Value(it.getLong(0)) },
-            0
-        ).value
+        Query(0, this, "PRAGMA $versionPragma;") { QueryResult.Value(it.getLong(0)) }.executeAsOne().value
+            ?: throw Exception("return null")
     } catch (e: Exception) {
+        println(e)
         null
     }
 

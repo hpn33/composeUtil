@@ -1,12 +1,15 @@
 package util.compose.cacher
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 
 
 // - [x] signal - observer
 // - [ ] multi table act -withDep
 // - [ ] split the where use and what use ( location and action key )
 // - [ ] hook to location and be disposed
+
+
 
 data class Observable<T : Any?>(
     val key: String,
@@ -79,6 +82,11 @@ data class Observable<T : Any?>(
         val localKey = this.key + ".local" + key
 
         return actionCatcher.getOrCreatePoint(localKey) { this.action() as T }
+    }
+
+    fun <R> byAction(action: (T?) -> R): ObservableSelector<T, R> {
+
+        return ObservableSelector(this, action)
     }
 
 }

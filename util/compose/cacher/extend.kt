@@ -1,6 +1,9 @@
 package util.compose.cacher
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import kotlin.random.Random
 
 
@@ -46,5 +49,14 @@ inline fun <T> Observable<T>.hook(): T? {
     val data by remember { state }
 
     return data
+
+}
+
+@Composable
+inline fun <T, R> ObservableSelector<T, R>.hook(): R? {
+
+    val data by remember { this.observable.state }
+
+    return data?.let { this.action(it) }
 
 }

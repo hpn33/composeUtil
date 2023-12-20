@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlin.jvm.JvmInline
 
 
-// TODO be null by user order
 @Composable
 inline fun <T> useFetch(
     initValue: T,

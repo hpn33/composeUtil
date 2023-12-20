@@ -1,0 +1,29 @@
+package util
+
+
+fun Long.toStringFix(size: Int): String {
+
+    val n = this.toString().reversed()
+    val nLength = n.length
+
+    val nCount = if (nLength > size) size else nLength
+    val nFix = if (nLength > size) 0 else (size - nLength)
+
+
+    val text =
+        buildList {
+
+            repeat(nCount) {
+                add(n[it].toString())
+            }
+
+            repeat(nFix) {
+                add("0")
+            }
+
+        }
+            .reversed()
+            .joinToString("") { it }
+
+    return text
+}

@@ -181,3 +181,12 @@ fun ProviderConsumer(content: @Composable (ref: ProviderService) -> Unit) {
     content(ref)
 
 }
+
+
+@Composable
+inline fun <T : Any> useProvider(provider: Provider<T>) =
+    ProviderRef().watch(provider)
+
+@Composable
+inline fun <T : Any> readProvider(provider: Provider<T>) =
+    ProviderRef().read(provider)
