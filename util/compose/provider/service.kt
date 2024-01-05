@@ -1,96 +1,209 @@
 package util.compose.provider
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-
-data class ProviderHolder(
-    val key: String,
-    val builder: () -> Any,
-    val state: MutableState<Any?> = mutableStateOf(null),
-    val dependencies: MutableList<String> = mutableListOf()
-) {
-    fun revalue() {
-
-        println("[ProviderHolder] $key [revalue]")
-
-        println("--[InProviderScope] $key")
-
-        state.value = builder()
-
-        println("--[\\InProviderScope] $key")
-
-    }
-
-    fun load() {
-
-        if (state.value != null) return
-
-        println("[ProviderHolder] $key [load]")
-
-        revalue()
-    }
-
-}
+import util.compose.provider.holder.*
+import util.compose.provider.provider.Provider
+import util.compose.provider.provider.SuspendProvider
+import util.log.Logger.log
+import util.log.loggerLevelDown
+import util.log.loggerLevelScope
+import util.log.loggerLevelUp
 
 
 class ProviderService {
 
-
-//    private val stateMap = mutableMapOf<Int, MutableState<Any>>()
-//    private val builderMap = mutableMapOf<Int, (() -> Any)>()
-//    private val dependentsMap = mutableMapOf<Int, ArrayList<Int>>() // provider/owner
-
     private val providers = mutableListOf<ProviderHolder>()
+    private val suspendProviders = mutableListOf<SuspendProviderHolder>()
 
-    fun getHolder(provider: Provider<*>): ProviderHolder? =
-        getHolder(provider.key)
 
-    fun getHolder(providerKey: String): ProviderHolder? {
-        println("[providerService] [getHolder] $providerKey")
-
-        return providers.find { it.key == providerKey }
+    fun getHolder(provider: Provider<*>): ProviderHolder? {
+        return providers.find { it.key == provider.key }
     }
 
 
-    fun <T : Any> registerOrGet(provider: Provider<T>): ProviderHolder {
+    fun <T : Any?> register(provider: Provider<T>): ProviderHolder {
 
-        println("[providerService] [registerOrGet]")
-
-        val key = provider.key
-        val ph = getHolder(key)
-
-        if (ph != null) {
-            println("[providerService] [get]")
-            return ph
-        }
-
-        println("[providerService] [register]")
+//        println("[providerService] [register] $provider")
 
         val ref = InProviderScope(provider, this)
-        val builder = { with(provider) { ref.builder() } }
+        val builder = { with(provider) { ref.builder() } as Any }
 
         val p = ProviderHolder(
-            key,
+            provider.toString(),
             builder,
         )
 
         providers.add(p)
 
+
         return p
 
     }
 
+
+    fun <T : Any?> registerOrGet(provider: Provider<T>): ProviderHolder {
+
+        val ph = getHolder(provider)
+
+
+        if (ph == null) {
+
+            log("[providerService] [register] $provider")
+
+            val p = register(provider)
+            p.load()
+
+
+
+            return p
+        }
+
+
+//        log("[providerService] [get] $provider")
+
+        return ph
+    }
+
+
     fun depending(
-        providerKey: String,
+        provider: Provider<*>,
         dependencyKey: String,
     ) {
 
-        println("[providerService] [depending]")
+//        log("[providerService] [depending] $provider")
 
-        val dependency = getHolder(providerKey)?.dependencies!!
+        val dependency = getHolder(provider)!!.dependencies
 
         if (!dependency.contains(dependencyKey)) {
-            println("[providerService] [depend]")
+            log("[providerService] [depend] $provider")
+            dependency.add(dependencyKey)
+        }
+
+//        log(dependency.toString())
+
+    }
+
+
+    fun <T : Any?> getState(provider: Provider<T>): MutableState<T> {
+
+//        log("[providerService] [getState] $provider")
+
+        loggerLevelUp()
+        val ph = registerOrGet(provider)
+        loggerLevelDown()
+
+        return ph.state as MutableState<T>
+    }
+
+
+    suspend fun <T : Any> setState(provider: Provider<T>, value: T) {
+
+        log("[providerService] [setState] $provider")
+
+        val state = getState(provider)
+
+        loggerLevelUp()
+
+        log("[providerService] value ${state.value}")
+        state.value = value
+        log("[providerService] value ${state.value}")
+
+        recomputeDependents(provider.key)
+
+        loggerLevelDown()
+
+    }
+
+
+    private suspend fun recomputeDependents(providerKey: String) {
+        log("[providerService] [recomputeDependents] $providerKey")
+
+        loggerLevelScope {
+
+            providers
+                .filter { it.dependencies.contains(providerKey) }
+//            .also { log("norm: ${it.map { it.key }}") }
+                .forEach {
+
+                    log("norm: $providerKey")
+
+                    loggerLevelScope {
+                        it.revalue()
+                        recomputeDependents(it.key)
+                    }
+                }
+
+            suspendProviders
+                .filter { it.dependencies.contains(providerKey) }
+//            .also { log("susp: ${it.map { it.key }}") }
+                .forEach {
+
+                    log("susp: $providerKey")
+
+                    loggerLevelScope {
+                        it.revalue()
+                        recomputeDependents(it.key)
+                    }
+                }
+
+        }
+    }
+
+
+    /// -------------------------------- Suspend Provider
+
+
+    fun getHolder(provider: SuspendProvider<*>): SuspendProviderHolder? {
+        return suspendProviders.find { it.key == provider.key }
+    }
+
+
+    fun <T : Any?> register(provider: SuspendProvider<T>): SuspendProviderHolder {
+
+//        log("[providerService] [register] $provider")
+
+        val ref = InSuspendProviderScope(provider, this)
+        val builder = suspend { with(provider) { ref.builder() } }
+
+        val p = SuspendProviderHolder(
+            provider.toString(),
+            builder,
+        )
+
+        suspendProviders.add(p)
+
+
+        return p
+
+    }
+
+    fun <T : Any?> registerOrGet(provider: SuspendProvider<T>): SuspendProviderHolder {
+
+        val ph = getHolder(provider)
+
+        if (ph == null) {
+
+            log("[providerService] [register] $provider")
+
+            return register(provider)
+        }
+
+//        log("[providerService] [get] $provider")
+
+        return ph
+    }
+
+    fun depending(
+        provider: SuspendProvider<*>,
+        dependencyKey: String,
+    ) {
+
+//        log("[providerService] [depending] $provider")
+
+        val dependency = getHolder(provider)!!.dependencies
+
+        if (!dependency.contains(dependencyKey)) {
+            log("[providerService] [depend] $provider")
             dependency.add(dependencyKey)
         }
 
@@ -98,71 +211,55 @@ class ProviderService {
     }
 
 
-    fun <T : Any> getState(provider: Provider<T>): MutableState<T> {
+    fun <T : Any?> getState(provider: SuspendProvider<T>): MutableState<SuspendState<T?>> {
 
-        println("[providerService] [getState]")
+//        log("[providerService] [getState] $provider")
 
-        val ph = initAndGet(provider)
+        loggerLevelUp()
+        val ph = registerOrGet(provider)
+        loggerLevelDown()
 
-        return ph.state as MutableState<T>
+        return ph.state as MutableState<SuspendState<T?>>
     }
 
 
-    fun <T : Any> setState(provider: Provider<T>, value: T) {
+    suspend fun <T : Any?> setState(provider: SuspendProvider<T>, value: T?) {
 
-        println("[providerService] [setState]")
+        log("[providerService] [setState] $provider")
 
 
-        getState(provider).value = value
+        val state = getState(provider)
 
+        loggerLevelUp()
+
+
+        log("[providerService] value ${state.value}")
+
+
+        val data = state.value.on(error = { null }, loading = { it }) { it }
+
+
+        state.value = SuspendState.Loading(data)
+
+
+        try {
+
+            state.value = SuspendState.Data(value)
+
+        } catch (e: Exception) {
+            state.value = SuspendState.Error(e)
+        }
+
+        log("[providerService] value ${state.value}")
 
         recomputeDependents(provider.key)
-    }
 
-
-    private fun recomputeDependents(providerKey: String) {
-        println("[providerService] [recomputeDependents]")
-
-        val dep = providers.filter { it.dependencies.contains(providerKey) }
-
-        dep.forEach { it.revalue() }
-
-    }
-
-    private fun <T : Any> initAndGet(provider: Provider<T>): ProviderHolder {
-
-        println("[providerService] [initAndGet]")
-
-        val ph = registerOrGet(provider)
-        ph.load()
-
-        return ph
-    }
-
-}
-
-
-class InProviderScope(
-    private val currentProvider: Provider<*>,
-    private val providerService: ProviderService
-) {
-
-    fun <T : Any> get(provider: Provider<T>): T {
-
-        println("[InProviderScope] ${currentProvider.key} [get] ${provider.key}")
-
-
-        val ph = providerService.registerOrGet(provider)
-        ph.load()
-
-        providerService.depending(
-            providerKey = currentProvider.key,
-            dependencyKey = ph.key
-        )
-
-        return (ph.state as MutableState<T>).value
+        loggerLevelDown()
 
     }
 
 
 }
+
+
+

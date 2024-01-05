@@ -4,10 +4,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
 
-
 // 1 2 4 8 16 32 64
 // 12 18 48
-
 
 
 val size1dp get() = 1.dp
@@ -34,10 +32,19 @@ val round50p get() = RoundedCornerShape(50)
 val round100p get() = RoundedCornerShape(100)
 
 
+val round1d get() = RoundedCornerShape(1.dp)
+val round2d get() = RoundedCornerShape(2.dp)
+val round4d get() = RoundedCornerShape(4.dp)
 val round5d get() = RoundedCornerShape(5.dp)
+val round6d get() = RoundedCornerShape(6.dp)
+val round8d get() = RoundedCornerShape(8.dp)
 val round10d get() = RoundedCornerShape(10.dp)
+val round12d get() = RoundedCornerShape(12.dp)
+val round14d get() = RoundedCornerShape(14.dp)
 val round15d get() = RoundedCornerShape(15.dp)
+val round16d get() = RoundedCornerShape(16.dp)
 val round20d get() = RoundedCornerShape(20.dp)
+val round24d get() = RoundedCornerShape(24.dp)
 val round25d get() = RoundedCornerShape(25.dp)
 val round50d get() = RoundedCornerShape(50.dp)
 

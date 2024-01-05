@@ -1,8 +1,8 @@
 package util.compose.provider
 
-import androidx.compose.runtime.*
-import util.kot.delegate.SetGetDelegate
-import util.kot.delegate.setGetVal
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 
 
 // compose ability: use for store providerService
@@ -34,73 +34,3 @@ fun ProviderConsumer(content: @Composable (ref: ProviderService) -> Unit) {
 
 }
 
-
-@Composable
-inline fun <T : Any> useProvider(provider: Provider<T>): SetGetDelegate<T> {
-
-    println("c: [useProvider] ${provider.key}")
-
-    val ref = ProviderRef()
-
-    val state by remember { ref.getState(provider) }
-
-    val v = remember {
-        setGetVal(
-            set = {
-                ref.setState(provider, it)
-            },
-            get = {
-                state
-            },
-        )
-
-    }
-
-    return v
-}
-
-@Composable
-inline fun <T : Any> useProviderLocal(provider: Provider<T>): MutableState<T> {
-
-    println("c: [useProviderLocal] ${provider.key}")
-
-    val ref = ProviderRef()
-
-    val state = remember { mutableStateOf(ref.getState(provider).value) }
-
-    return state
-}
-
-
-@Composable
-inline fun <T : Any> accessProvider(provider: Provider<T>): SetGetDelegate<T> {
-
-    println("c: [accessProvider] ${provider.key}")
-
-    val ref = ProviderRef()
-
-    val v = remember {
-        setGetVal(
-            set = {
-                ref.setState(provider, it)
-            },
-            get = {
-                ref.getState(provider).value
-            },
-        )
-
-    }
-
-    return v
-}
-
-
-@Composable
-inline fun <T : Any> readProvider(provider: Provider<T>): T {
-
-    val ref = ProviderRef()
-
-    val value = remember { ref.getState(provider).value as T }
-
-    return value
-}

@@ -53,6 +53,35 @@ inline fun <T> Observable<T>.hook(): T? {
 }
 
 @Composable
+inline fun <T> Observable<T>.hook(key: Any): T? {
+
+    val data by remember(key) { state }
+
+    return data
+
+}
+
+
+//@Composable
+//inline fun <T> useObserver(observable: Observable<T>): T? {
+//
+//    val observer = remember { observable }.hook()
+////    val state = observer.hook()
+//
+//    return observer
+//}
+//
+//@Composable
+//inline fun <T> useObserver(key: Any, observable: Observable<T>): T? {
+//
+//    val observer = remember(key) { observable }.hook(key)
+////    val state = observer.hook(key)
+//
+//    return observer
+//}
+
+
+@Composable
 inline fun <T, R> ObservableSelector<T, R>.hook(): R? {
 
     val data by remember { this.observable.state }

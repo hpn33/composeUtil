@@ -10,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 // - [ ] hook to location and be disposed
 
 
-
 data class Observable<T : Any?>(
     val key: String,
     val action: () -> Any?,
@@ -25,7 +24,9 @@ data class Observable<T : Any?>(
 
 
     // two type of exe point one without change - one with change
-    operator fun invoke(): Observable<T> {
+    operator fun invoke(): Observable<T> = callByRefresh()
+
+    fun callByRefresh(): Observable<T> {
         renewValue()
 
         return this
