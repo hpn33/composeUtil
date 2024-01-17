@@ -107,8 +107,8 @@ value class FetchResult<T>(val fetchValue: FetchState<T>) {
         data: @Composable (T?) -> Unit
     ) {
 
-        println(fetchValue)
-        println()
+//        println(fetchValue)
+//        println()
 
         when (fetchValue) {
             is FetchState.Error -> {

@@ -27,3 +27,26 @@ fun Long.toStringFix(size: Int): String {
 
     return text
 }
+
+fun Float.toStringFix(size: Int): String {
+
+    val n = this.toString().split(".")
+
+    val text =
+        buildList {
+
+            add(n.first())
+
+            add(".")
+
+            repeat(size) {
+                val a = n[1].getOrNull(it) ?: '0'
+
+                add(a.toString())
+            }
+
+        }
+            .joinToString("") { it }
+
+    return text
+}

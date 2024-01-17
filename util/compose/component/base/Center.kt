@@ -75,7 +75,7 @@ inline fun ColumnCenter(modifier: Modifier = Modifier, content: @Composable Colu
 @Composable
 inline fun ColumnFillCenter(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth().then(modifier),
+        modifier = Modifier.fillMaxHeight().then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

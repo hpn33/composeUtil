@@ -84,6 +84,19 @@ class ProviderService {
     }
 
 
+    fun dispose(provider: Provider<*>) {
+
+//        log("[providerService] [getState] $provider")
+
+        loggerLevelUp()
+        val ph = registerOrGet(provider)
+        loggerLevelDown()
+
+        providers.remove(ph)
+
+    }
+
+
     fun <T : Any?> getState(provider: Provider<T>): MutableState<T> {
 
 //        log("[providerService] [getState] $provider")
@@ -207,6 +220,18 @@ class ProviderService {
             dependency.add(dependencyKey)
         }
 
+
+    }
+
+    fun dispose(provider: SuspendProvider<*>) {
+
+//        log("[providerService] [getState] $provider")
+
+        loggerLevelUp()
+        val ph = registerOrGet(provider)
+        loggerLevelDown()
+
+        suspendProviders.remove(ph)
 
     }
 

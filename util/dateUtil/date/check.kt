@@ -25,11 +25,34 @@ inline val LocalDateTime.isAfterNow
 
 // by day
 
+inline val LocalDateTime.isBeforeToday
+    get() = this.toLocalDateX().isBeforeToday
+inline val LocalDate.isBeforeToday
+    get() = this < nowLocalDateX()
+
 
 inline val LocalDateTime.isToday
     get() = this.toLocalDateX().isToday
 inline val LocalDate.isToday
     get() = this == nowLocalDateX()
+
+
+inline val LocalDateTime.isAfterToday
+    get() = this.toLocalDateX().isAfterToday
+inline val LocalDate.isAfterToday
+    get() = this > nowLocalDateX()
+
+
+inline val LocalDateTime.isTodayOrAfter
+    get() = this.toLocalDateX().isTodayOrAfter
+inline val LocalDate.isTodayOrAfter
+    get() = this.isToday || this.isAfterToday
+
+
+inline val LocalDateTime.isTodayOrBefore
+    get() = this.toLocalDateX().isTodayOrAfter
+inline val LocalDate.isTodayOrBefore
+    get() = this.isToday || this.isBeforeToday
 
 
 inline val LocalDateTime.isYesterday
@@ -69,17 +92,6 @@ inline fun LocalDate.isTomorrowOf(date: LocalDateTime) =
 inline fun LocalDate.isTomorrowOf(date: LocalDate) =
     this == date.toPrimeCivil().goToNextDay().toLocalDateX()
 
-
-inline val LocalDateTime.isBeforeToday
-    get() = this.toLocalDateX().isBeforeToday
-inline val LocalDate.isBeforeToday
-    get() = this < nowLocalDateX()
-
-
-inline val LocalDateTime.isAfterToday
-    get() = this.toLocalDateX().isAfterToday
-inline val LocalDate.isAfterToday
-    get() = this > nowLocalDateX()
 
 
 

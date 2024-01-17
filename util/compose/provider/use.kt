@@ -11,6 +11,46 @@ import util.log.Logger.log
 
 
 @Composable
+inline fun hookProviderDisposition(provider: Provider<*>) {
+
+    log("[hookProviderDisposition] $provider")
+
+    val ref = ProviderRef()
+
+    DisposableEffect(Unit) {
+        ref.getState(provider)
+
+        onDispose {
+            log("[hookProviderDisposition] $provider disposed")
+
+            ref.dispose(provider)
+        }
+    }
+
+}
+
+
+@Composable
+inline fun hookProviderDisposition(provider: SuspendProvider<*>) {
+
+    log("[hookProviderDisposition] $provider")
+
+    val ref = ProviderRef()
+
+    DisposableEffect(Unit) {
+        ref.getState(provider)
+
+        onDispose {
+            log("[hookProviderDisposition] $provider disposed")
+
+            ref.dispose(provider)
+        }
+    }
+
+}
+
+
+@Composable
 inline fun <T : Any> useProvider(provider: Provider<T>): SetGetDelegate<T> {
 
     log("[useProvider] $provider")
