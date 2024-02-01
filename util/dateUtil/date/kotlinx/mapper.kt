@@ -6,11 +6,13 @@ import util.dateUtil.date.convert.toLocalDateX
 // instant -> ?
 inline fun Instant.toLocalDateTimeX() = toLocalDateTime(TimeZone.currentSystemDefault())
 inline fun Instant.toLocalDateX() = toLocalDateTimeX().toLocalDateX()
+inline fun Instant.toLocalTimeX() = toLocalDateTimeX().toLocalTimeX()
 
 
 // localDateTime -> ?
 fun LocalDateTime.toInstantX() = toInstant(TimeZone.currentSystemDefault())
 fun LocalDateTime.toLocalDateX(): LocalDate = LocalDate(this.year, this.month, this.dayOfMonth)
+fun LocalDateTime.toLocalTimeX(): LocalTime = LocalTime(hour, minute, second, nanosecond)
 
 
 // localDate -> ?

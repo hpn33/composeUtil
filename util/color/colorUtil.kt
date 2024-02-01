@@ -1,6 +1,7 @@
 package util.color
 
 import androidx.compose.ui.graphics.Color
+import kotlin.random.Random
 
 
 //val colorMatrix = floatArrayOf(
@@ -15,6 +16,12 @@ import androidx.compose.ui.graphics.Color
 //    return ColorFilter.colorMatrix(ColorMatrix(colorMatrix))
 //}
 
+fun getRandomColor() =
+    Color(
+        Random.nextDouble(1.0).toFloat(),
+        Random.nextDouble(1.0).toFloat(),
+        Random.nextDouble(1.0).toFloat()
+    )
 
 fun Color.invert() =
     copy(red = 1 - red, green = 1 - green, blue = 1 - blue)
