@@ -29,6 +29,15 @@ inline fun hookProviderDisposition(provider: Provider<*>) {
 
 }
 
+@Composable
+inline fun hookProviderDisposition(vararg provider: Provider<*>) {
+
+    provider.forEach {
+        hookProviderDisposition(it)
+    }
+
+}
+
 
 @Composable
 inline fun hookProviderDisposition(provider: SuspendProvider<*>) {
