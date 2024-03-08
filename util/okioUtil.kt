@@ -1,7 +1,6 @@
 package util
 
-import okio.FileSystem
-import okio.IOException
+import okio.*
 import okio.Path.Companion.toOkioPath
 import okio.Path.Companion.toPath
 import java.io.File
@@ -70,3 +69,24 @@ fun okioMakeFile(dir: String, fileName: String, content: String = ""): Boolean {
 
 
 
+
+
+fun okioCopyPasteFile(from: String, to: String) {
+
+    val copyFilePath = File(from)
+    val pasteFilePath = File(to)
+
+    // Read the original file
+    val source = copyFilePath.source().buffer()
+
+    // Write to the new file
+    val sink = pasteFilePath.sink().buffer()
+
+    // Copy the content
+    sink.writeAll(source)
+
+    // Close the sources and sinks to release resources
+    source.close()
+    sink.close()
+
+}

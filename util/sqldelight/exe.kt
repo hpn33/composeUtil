@@ -1,8 +1,6 @@
 package util.sqldelight
 
-import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
-import java.sql.Driver
 
-inline fun SqlDriver.execute(query: String) =
+inline fun SqlDriver.queryExecute(query: String) =
     execute(null, query, 0)

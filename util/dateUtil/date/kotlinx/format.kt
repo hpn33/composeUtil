@@ -1,9 +1,9 @@
 package util.dateUtil.date.kotlinx
 
 import com.aminography.primecalendar.PrimeCalendar
+import kotlinx.datetime.*
 import util.dateUtil.date.java.nowJ
 import util.dateUtil.date.prime.getNormalNumericDate
-import kotlinx.datetime.*
 import java.time.Period
 
 
@@ -19,11 +19,14 @@ fun LocalDateTime.toAge() =
 fun DatePeriod.toAgeFormate() =
     "${years}y ${months}m ${days}d"
 
+fun LocalDateTime.toTimeFormate() =
+    "${hour.toString().padStart(2, '0')}-${minute.toString().padStart(2, '0')}-${second.toString().padStart(2, '0')}"
+
 fun LocalDateTime.toDateFormate() =
-    "${year}-${monthNumber}-${dayOfMonth}"
+    "${year}-${monthNumber.toString().padStart(2, '0')}-${dayOfMonth.toString().padStart(2, '0')}"
 
 fun LocalDate.toDateFormate() =
-    "${year}-${monthNumber}-${dayOfMonth}"
+    "${year}-${monthNumber.toString().padStart(2, '0')}-${dayOfMonth.toString().padStart(2, '0')}"
 
 fun LocalDateTime.toDateFormateWithHash() =
     "${year}/${monthNumber}/${dayOfMonth}"

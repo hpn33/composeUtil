@@ -18,10 +18,12 @@ class FieldFactorScope {
         fields.add(field)
     }
 
-
 }
 
-fun SqlDriver.createTable(table: String, fieldFactor: FieldFactorScope.() -> Unit): QueryResult<Long> {
+fun SqlDriver.createTable(
+    table: String,
+    fieldFactor: FieldFactorScope.() -> Unit
+): QueryResult<Long> {
 
     val scope = FieldFactorScope()
     scope.fieldFactor()
@@ -31,15 +33,20 @@ fun SqlDriver.createTable(table: String, fieldFactor: FieldFactorScope.() -> Uni
     return execute(null, "CREATE TABLE IF NOT EXISTS $table ($fields);", 0)
 }
 
-fun SqlDriver.renameTo(from: String, to: String) =
+fun SqlDriver.renameTable(from: String, to: String) =
     execute(0, "ALTER TABLE $from RENAME TO $to", 0)
 
-fun <R : Any> SqlDriver.selectAll(from: String, mapper: (SqlCursor) -> R) =
-    Query(0, this, "SELECT * FROM $from", mapper)
 
-
-fun SqlDriver.drop(table: String) =
+fun SqlDriver.dropTable(table: String) =
     execute(0, "DROP TABLE $table ", 0)
 
-fun SqlDriver.drop(table: String, column: String) =
+fun SqlDriver.dropColumn(table: String, column: String) =
     execute(0, "ALTER TABLE $table DROP COLUMN $column", 0)
+
+
+fun <R : Any> SqlDriver.query(query: String, mapper: (SqlCursor) -> R) =
+    Query(0, this, query, mapper)
+
+
+fun <R : Any> SqlDriver.selectAll(table: String, mapper: (SqlCursor) -> R) =
+    query("SELECT * FROM $table", mapper)
