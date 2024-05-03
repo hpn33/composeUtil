@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import util.compose.provider.holder.SuspendState
 import util.compose.provider.provider.Provider
 import util.compose.provider.provider.SuspendProvider
+import util.compose.state.useState
 import util.kot.delegate.SetGetDelegate
 import util.kot.delegate.setGetVal
 import util.log.Logger.log
@@ -111,6 +112,31 @@ inline fun <T : Any> useProvider(key: Any, provider: Provider<T>): SetGetDelegat
     }
 
     return v
+}
+
+
+/**
+ * is provider, state change by exact selection
+ *
+ */
+@Composable
+inline fun <T : Any, R> useProviderSelection(provider: Provider<T>, crossinline selector: (T) -> R): R {
+
+    log("[useProvider] $provider")
+
+    val pro by useProvider(provider)
+    var state by useState(selector(pro))
+
+    LaunchedEffect(pro) {
+
+        val newState = selector(pro)
+
+        if (newState != state)
+            state = newState
+
+    }
+
+    return state
 }
 
 

@@ -3,6 +3,7 @@ package util.compose.provider
 import androidx.compose.runtime.MutableState
 import util.compose.provider.holder.*
 import util.compose.provider.provider.Provider
+import util.compose.provider.provider.ProviderWatch
 import util.compose.provider.provider.SuspendProvider
 import util.log.Logger.log
 import util.log.loggerLevelDown
@@ -13,6 +14,7 @@ import util.log.loggerLevelUp
 class ProviderService {
 
     private val providers = mutableListOf<ProviderHolder>()
+    private val providerWatch = mutableListOf<ProviderHolder>()
     private val suspendProviders = mutableListOf<SuspendProviderHolder>()
 
 
@@ -31,6 +33,7 @@ class ProviderService {
         val p = ProviderHolder(
             provider.toString(),
             builder,
+            watchers = provider.watchers as List<ProviderWatch<Any>>
         )
 
         providers.add(p)
@@ -119,11 +122,18 @@ class ProviderService {
 
         log("[providerService] value ${state.value}")
         state.value = value
+        watcherAction(provider, value)
         log("[providerService] value ${state.value}")
 
         recomputeDependents(provider.key)
 
         loggerLevelDown()
+
+    }
+
+    private fun <T : Any> watcherAction(value: Provider<T>, value1: T) {
+
+        getHolder(value)?.watchers?.forEach { it.setAction(value1) }
 
     }
 

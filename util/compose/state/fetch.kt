@@ -2,8 +2,6 @@ package util.compose.state
 
 import androidx.compose.runtime.*
 import kotlinx.coroutines.CoroutineScope
-import kotlin.jvm.JvmInline
-
 
 @Composable
 inline fun <T> useFetch(
@@ -35,6 +33,43 @@ inline fun <T> useFetch(
     LaunchedEffect(key) {
 
         state = function(state)
+
+    }
+
+    return state
+}
+
+
+@Composable
+inline fun <T> useFetchState(
+    initValue: T,
+    crossinline function: suspend CoroutineScope.(T) -> T
+): MutableState<T> {
+
+    val state = useState(initValue)
+
+    LaunchedEffect(Unit) {
+
+        state.value = function(state.value)
+
+    }
+
+    return state
+}
+
+
+@Composable
+inline fun <T> useFetchState(
+    key: Any?,
+    initValue: T,
+    crossinline function: suspend CoroutineScope.(T) -> T
+): MutableState<T> {
+
+    val state = useState(key, initValue)
+
+    LaunchedEffect(key) {
+
+        state.value = function(state.value)
 
     }
 

@@ -21,7 +21,7 @@ inline fun Center(
 @Composable
 inline fun FillCenter(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable BoxScope.() -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize().then(modifier),

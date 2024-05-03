@@ -53,6 +53,7 @@ abstract class ProviderBase(
 
 class Provider<T : Any?>(
     label: String = "",
+    val watchers: List<ProviderWatch<T>> = emptyList(),
     val builder: InProviderScope.() -> T,
 ) : ProviderBase(label)
 
@@ -61,3 +62,16 @@ class SuspendProvider<T : Any?>(
     val builder: suspend InSuspendProviderScope.() -> T,
 ) : ProviderBase(label)
 
+
+// ----------------
+
+
+open class ProviderWatch<T>(
+    val setAction: (T) -> Unit = {},
+//    val getAction: (T) -> Unit = {}
+)
+
+fun <T> providerWatch(
+    set: (T) -> Unit = {},
+//    get: (T) -> Unit = {}
+) = ProviderWatch(set)

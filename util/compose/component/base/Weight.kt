@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun RowScope.Weight(weight: Float = 1f, content: @Composable () -> Unit) {
+fun RowScope.Weight(weight: Float = 1f, content: @Composable () -> Unit = {}) {
 
     Box(Modifier.weight(weight)) {
         content()
@@ -16,10 +16,32 @@ fun RowScope.Weight(weight: Float = 1f, content: @Composable () -> Unit) {
 }
 
 @Composable
-fun ColumnScope.Weight(weight: Float = 1f, content: @Composable () -> Unit) {
+fun RowScope.WeightCenter(weight: Float = 1f, content: @Composable () -> Unit) {
+
+    Weight(weight) {
+        RowFillCenter {
+            content()
+        }
+    }
+
+}
+
+
+@Composable
+fun ColumnScope.Weight(weight: Float = 1f, content: @Composable () -> Unit = {}) {
 
     Box(Modifier.weight(weight)) {
         content()
     }
 
+}
+
+@Composable
+fun ColumnScope.WeightCenter(weight: Float = 1f, content: @Composable () -> Unit) {
+
+    Weight(weight) {
+        ColumnFillCenter {
+            content()
+        }
+    }
 }

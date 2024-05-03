@@ -6,6 +6,8 @@ import com.aminography.primecalendar.common.operators.minus
 import com.aminography.primecalendar.common.operators.plus
 import com.aminography.primecalendar.persian.PersianCalendar
 import kotlinx.datetime.LocalDate
+import util.dateUtil.date.kotlinx.toInstantX
+import kotlin.math.round
 
 
 fun makeWeekCenterOf(selectedDay: LocalDate) =
@@ -54,13 +56,37 @@ fun makeMonth(selectedDay: LocalDate) =
         }
     }
 
+//fun makeYear(selectedDay: LocalDate) =
+//    buildList {
+//        val firstOfMonth = selectedDay.toPersian().goToFirstDayOfMonth()
+//
+//        repeat(firstOfMonth.monthLength) {
+//            add(
+//                (firstOfMonth.plus(it.dayOfMonth) as PersianCalendar).toLocalDateX()
+//            )
+//        }
+//    }
 
-data class DayDate(
-    val index: Int,
-    val date: LocalDate?
-)
 
-fun makeMonthToWeeks(selectedDay: LocalDate): List<List<DayDate>> {
+//data class DayData(
+//    val index: Int,
+//    val date: LocalDate?
+//)
+
+fun makeYearToMonthToWeeks(selectedDay: LocalDate) =
+    (0..<12).toList()
+        .map {
+
+            val month = PersianCalendar().apply { set(selectedDay.toPersian().year, it, 10) }
+                .toLocalDateX()
+
+            makeMonthToWeeks(month)
+
+
+        }
+
+
+fun makeMonthToWeeks(selectedDay: LocalDate): List<List<LocalDate?>> {
 
     val thisMonth = selectedDay.toPersian()
 
@@ -94,7 +120,8 @@ fun makeMonthToWeeks(selectedDay: LocalDate): List<List<DayDate>> {
 //                            val record = dayDate?.let { state.getDayRecord(it) }
 
                         add(
-                            DayDate(index, /*dayIndex,*/ dayDate/*, record*/)
+                            dayDate
+//                            DayData(index, /*dayIndex,*/ dayDate/*, record*/)
                         )
                     }
                 }
@@ -105,3 +132,23 @@ fun makeMonthToWeeks(selectedDay: LocalDate): List<List<DayDate>> {
 
     return weeks
 }
+
+fun makeWeeks(start: LocalDate, end: LocalDate): List<List<LocalDate>> {
+
+    val a = round(((end.toInstantX() - start.toInstantX()).inWholeDays / 7.0))
+
+    val firstDayLocate = end.toPersian().goToFirstOfWeek()
+
+    val weeks = buildList {
+
+
+        repeat(a.toInt()) { weekIndex ->
+            add(makeWeek(firstDayLocate.goBackwardAsWeek(weekIndex).toLocalDateX()))
+        }
+
+    }
+
+    return weeks
+}
+
+

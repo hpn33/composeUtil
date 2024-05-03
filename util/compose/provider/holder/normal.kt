@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import util.compose.provider.ProviderService
 import util.compose.provider.provider.Provider
+import util.compose.provider.provider.ProviderWatch
 import util.compose.provider.provider.SuspendProvider
 import util.log.Logger.log
 import util.log.loggerLevelDown
@@ -15,7 +16,8 @@ data class ProviderHolder(
     val key: String,
     val builder: () -> Any,
     val state: MutableState<Any?> = mutableStateOf(null),
-    val dependencies: MutableList<String> = mutableListOf()
+    val dependencies: MutableList<String> = mutableListOf(),
+    val watchers: List<ProviderWatch<Any>> = listOf()
 ) {
     fun revalue() {
 

@@ -6,31 +6,45 @@ import com.aminography.primecalendar.common.operators.minus
 import com.aminography.primecalendar.common.operators.month
 import com.aminography.primecalendar.common.operators.plus
 import com.aminography.primecalendar.persian.PersianCalendar
-import kotlin.time.Duration.Companion.days
 
 
-inline fun <T : PrimeCalendar> T.goForwardAsWeek() =
-    plus(7.dayOfMonth) as T
+inline fun <T : PrimeCalendar> T.goForwardAsWeek(weeks: Int = 1) =
+    plus((weeks * 7).dayOfMonth) as T
+
+inline fun <T : PrimeCalendar> T.goBackwardAsWeek(weeks: Int = 1) =
+    minus((weeks * 7).dayOfMonth) as T
 
 
-inline fun <T : PrimeCalendar> T.goBackwardAsWeek() =
-    minus(7.dayOfMonth) as T
+fun <T : PrimeCalendar> T.nextWeek() = goForwardAsWeek()
+fun <T : PrimeCalendar> T.prevWeek() = goBackwardAsWeek()
+// ---
 
 
-inline fun <T : PrimeCalendar> T.goToNextDay() =
-    plus(1.dayOfMonth) as T
+inline fun <T : PrimeCalendar> T.goToNextDay(days: Int = 1) =
+    plus(days.dayOfMonth) as T
+
+inline fun <T : PrimeCalendar> T.goToPrevDay(days: Int = 1) =
+    minus(days.dayOfMonth) as T
 
 
-inline fun <T : PrimeCalendar> T.goToPrevDay() =
-    minus(1.dayOfMonth) as T
+fun <T : PrimeCalendar> T.nextDay() = goToNextDay()
+fun <T : PrimeCalendar> T.prevDay() = goToPrevDay()
+
+// ---
 
 
-inline fun <T : PrimeCalendar> T.goForwardAsMonth() =
-    plus(1.month) as T
+inline fun <T : PrimeCalendar> T.goForwardAsMonth(months: Int = 1) =
+    plus(months.month) as T
+
+inline fun <T : PrimeCalendar> T.goBackwardAsMonth(months: Int = 1) =
+    minus(months.month) as T
 
 
-inline fun <T : PrimeCalendar> T.goBackwardAsMonth() =
-    minus(1.month) as T
+fun <T : PrimeCalendar> T.nextMonth() = goForwardAsMonth()
+fun <T : PrimeCalendar> T.prevMonth() = goBackwardAsMonth()
+
+
+// ---
 
 
 fun getFirstOfWeek(selectedDay: PrimeCalendar): PrimeCalendar {
@@ -63,6 +77,9 @@ inline fun <T : PrimeCalendar> T.goToFirstDayOfMonth() =
 
 inline fun <T : PrimeCalendar> T.goToLastDayOfMonth() =
     apply { set(year, month, monthLength) }
+
+
+// ---
 
 
 inline fun <T : PrimeCalendar> T.goToFirstOfWeek() =

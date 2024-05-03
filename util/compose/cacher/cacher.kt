@@ -67,7 +67,7 @@ data class Observable<T : Any?>(
 
     fun renewValue() {
         changeValue(action())
-        println("reValued::$key")
+//        println("reValued::$key")
     }
 
     fun free() {
@@ -119,8 +119,8 @@ class ActionCatcher {
             observers.add(observable)
         }
 
-        val status = if (wasNotExist) "c" else "g"
-        println("observe:$status> $key")
+//        val status = if (wasNotExist) "c" else "g"
+//        println("observe:$status> $key")
 
         return observable as Observable<T>
     }
@@ -149,34 +149,34 @@ class ActionCatcher {
     }
 
 
-    fun signalToHaveAnyKey(targetKeys: List<String> = listOf()) {
+    fun signalHasAny(targetKeys: List<String> = listOf()) {
 
-        println("signal[to have any]>> $targetKeys")
+//        println("signal[to have any]>> $targetKeys")
 
         signal(targetKeys) { item -> targetKeys.any { targetKey -> item.key.contains(targetKey) } }
 
     }
 
-    fun signalToHaveAnyKey(targetKey: String) = signalToHaveAnyKey(listOf(targetKey))
-    fun signalToHaveAnyKey(vararg targetKey: String) = signalToHaveAnyKey(listOf(*targetKey))
+    fun signalHasAny(targetKey: String) = signalHasAny(listOf(targetKey))
+    fun signalHasAny(vararg targetKey: String) = signalHasAny(listOf(*targetKey))
 
 
-    fun signalToHaveAllKey(targetKeys: List<String> = listOf()) {
+    fun signalHasAll(targetKeys: List<String> = listOf()) {
 
-        println("signal[to have all]>> $targetKeys")
+//        println("signal[to have all]>> $targetKeys")
 
         // act to reacts
         signal(targetKeys) { item -> targetKeys.all { targetKey -> item.key.contains(targetKey) } }
 
     }
 
-    fun signalToHaveAllKey(targetKey: String) = signalToHaveAllKey(listOf(targetKey))
-    fun signalToHaveAllKey(vararg targetKey: String) = signalToHaveAllKey(listOf(*targetKey))
+    fun signalHasAll(targetKey: String) = signalHasAll(listOf(targetKey))
+    fun signalHasAll(vararg targetKey: String) = signalHasAll(listOf(*targetKey))
 
 
     fun remove(key: String) {
 
-        println("observe:d> $key")
+//        println("observe:d> $key")
 
         val observer = observers.find { it.key == key }
 

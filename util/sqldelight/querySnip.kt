@@ -17,7 +17,7 @@ WHERE
 }
 
 fun SqlDriver.queryGetTables() =
-    query(getTables()) {
+    exeQuery(getTables()) {
         it.getString(0) ?: "---"
     }
         .executeAsList()
@@ -29,7 +29,7 @@ fun getColumns(table: String): String {
 
 
 fun SqlDriver.queryGetColumns(table: String) =
-    query(getColumns(table)) {
+    exeQuery(getColumns(table)) {
         it.getString(1) ?: "---"
     }
         .executeAsList()

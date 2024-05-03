@@ -44,6 +44,16 @@ inline fun <T> Observable<T>.hookDisposable(): T? {
 }
 
 @Composable
+inline fun <T> Observable<T>.hookSure(): T {
+
+    val data by remember { state }
+
+    return data!!
+
+}
+
+
+@Composable
 inline fun <T> Observable<T>.hook(): T? {
 
     val data by remember { state }

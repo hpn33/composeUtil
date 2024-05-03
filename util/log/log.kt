@@ -7,13 +7,13 @@ object Logger {
 
     fun log(message: String) {
 
-        val tab = buildString {
-            repeat(level) {
-                append("   |")
-            }
-
-        }
-        println("$tab$message")
+//        val tab = buildString {
+//            repeat(level) {
+//                append("   |")
+//            }
+//
+//        }
+//        println("$tab$message")
     }
 
 
