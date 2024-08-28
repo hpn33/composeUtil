@@ -5,7 +5,23 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlPreparedStatement
+import share.db.DriverFactory
 import kotlin.random.Random
+
+
+class MigrationScope(val sqlDriver: SqlDriver, val factory: DriverFactory)
+
+@JvmInline
+value class QueryScope(val sqlDriver: SqlDriver) {
+    inline fun <T : Any> transition(action: SqlDriver.() -> T): T {
+        return sqlDriver.action()
+    }
+}
+
+inline fun <T> SqlDriver.queryScope(action: QueryScope.() -> T): T =
+    with(QueryScope(this)) {
+        action()
+    }
 
 
 class FieldFactorScope {
@@ -23,11 +39,15 @@ class FieldFactorScope {
 }
 
 
-inline fun SqlDriver.exe(query: String): QueryResult<Long> {
+inline fun SqlDriver.queryAction(query: String): QueryResult<Long> {
     return execute(null, query, 0)
 }
 
-inline fun SqlDriver.exe(query: String, parameters: Int, noinline binder: SqlPreparedStatement.() -> Unit): QueryResult<Long> {
+inline fun SqlDriver.queryAction(
+    query: String,
+    parameters: Int,
+    noinline binder: SqlPreparedStatement.() -> Unit
+): QueryResult<Long> {
     return execute(null, query, parameters, binder)
 }
 
@@ -65,11 +85,21 @@ inline fun SqlDriver.exe(query: String, parameters: Int, noinline binder: SqlPre
 //    return execute(null, query, binderScope.counter, binderScope.prepared)
 //}
 
-fun <R : Any> SqlDriver.exeQuery(query: String, mapper: (SqlCursor) -> R) =
+fun <R : Any> SqlDriver.queryResult(query: String, mapper: (SqlCursor) -> R) =
     Query(Random.nextInt(10000000), this, query, mapper)
 
+fun QueryScope.createTable(
+    tableInfo: TableInfo,
+): QueryResult<Long> {
 
-fun SqlDriver.createTable(
+    val tableName = tableInfo.name
+    val fields = tableInfo.fields.map { "${it.name} ${it.context}" }.joinToString { it }
+
+    return sqlDriver.execute(null, "CREATE TABLE IF NOT EXISTS $tableName ($fields);", 0)
+}
+
+
+fun QueryScope.createTable(
     table: String,
     fieldFactor: FieldFactorScope.() -> Unit
 ): QueryResult<Long> {
@@ -79,28 +109,31 @@ fun SqlDriver.createTable(
 
     val fields = scope.fields.joinToString { it }
 
-    return execute(null, "CREATE TABLE IF NOT EXISTS $table ($fields);", 0)
+    return sqlDriver.execute(null, "CREATE TABLE IF NOT EXISTS $table ($fields);", 0)
 }
 
-fun SqlDriver.renameTable(from: String, to: String) =
-    exe("ALTER TABLE $from RENAME TO $to")
+fun QueryScope.renameTable(from: String, to: String) =
+    sqlDriver.queryAction("ALTER TABLE $from RENAME TO $to")
 
 
-fun SqlDriver.dropTable(table: String) =
-    exe("DROP TABLE $table ")
+fun QueryScope.dropTable(table: String) =
+    sqlDriver.queryAction("DROP TABLE $table ")
 
-fun SqlDriver.dropColumn(table: String, column: String) =
-    exe("ALTER TABLE $table DROP COLUMN $column")
+fun QueryScope.dropColumn(table: String, column: String) =
+    sqlDriver.queryAction("ALTER TABLE $table DROP COLUMN $column")
 
+
+fun <R : Any> QueryScope.selectAll(table: String, mapper: (SqlCursor) -> R) =
+    sqlDriver.queryResult("SELECT * FROM $table", mapper)
 
 fun <R : Any> SqlDriver.selectAll(table: String, mapper: (SqlCursor) -> R) =
-    exeQuery("SELECT * FROM $table", mapper)
+    queryResult("SELECT * FROM $table", mapper)
 
-fun SqlDriver.count(table: String, whereCondition: String = ""): Int {
+fun QueryScope.count(table: String, whereCondition: String = ""): Int {
 
     val query = "SELECT COUNT(*) FROM $table"
 
     val where = if (whereCondition.isEmpty()) "" else "WHERE $whereCondition"
 
-    return exeQuery("$query $where") { 0 }.executeAsList().size
+    return sqlDriver.queryResult("$query $where") { 0 }.executeAsList().size
 }

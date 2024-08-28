@@ -149,7 +149,7 @@ class ActionCatcher {
     }
 
 
-    fun signalHasAny(targetKeys: List<String> = listOf()) {
+    fun signalAny(targetKeys: List<String> = listOf()) {
 
 //        println("signal[to have any]>> $targetKeys")
 
@@ -157,11 +157,11 @@ class ActionCatcher {
 
     }
 
-    fun signalHasAny(targetKey: String) = signalHasAny(listOf(targetKey))
-    fun signalHasAny(vararg targetKey: String) = signalHasAny(listOf(*targetKey))
+    fun signalAny(targetKey: String) = signalAny(listOf(targetKey))
+    fun signalAny(vararg targetKey: String) = signalAny(listOf(*targetKey))
 
 
-    fun signalHasAll(targetKeys: List<String> = listOf()) {
+    fun signalAll(targetKeys: List<String> = listOf()) {
 
 //        println("signal[to have all]>> $targetKeys")
 
@@ -170,8 +170,8 @@ class ActionCatcher {
 
     }
 
-    fun signalHasAll(targetKey: String) = signalHasAll(listOf(targetKey))
-    fun signalHasAll(vararg targetKey: String) = signalHasAll(listOf(*targetKey))
+    fun signalAll(targetKey: String) = signalAll(listOf(targetKey))
+    fun signalAll(vararg targetKey: String) = signalAll(listOf(*targetKey))
 
 
     fun remove(key: String) {

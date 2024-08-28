@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 
 // TODO: add animation
 
+
 @Composable
 fun NavHost(
     modifier: Modifier = Modifier,
@@ -36,10 +37,10 @@ fun NavHost(
 
 
 @Composable
-inline fun NavHost(
+fun NavHost(
     modifier: Modifier = Modifier,
     navService: NavService = nav,
-    crossinline root: @Composable () -> Unit = { Text("Root") },
+    root: @Composable () -> Unit = { Text("Root") },
 ) {
 
     NavHost(modifier, navService, rootScreen = makeScreen { root() })

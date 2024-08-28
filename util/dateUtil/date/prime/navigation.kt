@@ -1,10 +1,7 @@
 package util.dateUtil.date.prime
 
 import com.aminography.primecalendar.PrimeCalendar
-import com.aminography.primecalendar.common.operators.dayOfMonth
-import com.aminography.primecalendar.common.operators.minus
-import com.aminography.primecalendar.common.operators.month
-import com.aminography.primecalendar.common.operators.plus
+import com.aminography.primecalendar.common.operators.*
 import com.aminography.primecalendar.persian.PersianCalendar
 
 
@@ -47,6 +44,20 @@ fun <T : PrimeCalendar> T.prevMonth() = goBackwardAsMonth()
 // ---
 
 
+inline fun <T : PrimeCalendar> T.goForwardAsYear(years: Int = 1) =
+    plus(years.year) as T
+
+inline fun <T : PrimeCalendar> T.goBackwardAsYear(years: Int = 1) =
+    minus(years.year) as T
+
+
+fun <T : PrimeCalendar> T.nextYear() = goForwardAsYear()
+fun <T : PrimeCalendar> T.prevYear() = goBackwardAsYear()
+
+
+// ---
+
+
 fun getFirstOfWeek(selectedDay: PrimeCalendar): PrimeCalendar {
 
 
@@ -77,6 +88,18 @@ inline fun <T : PrimeCalendar> T.goToFirstDayOfMonth() =
 
 inline fun <T : PrimeCalendar> T.goToLastDayOfMonth() =
     apply { set(year, month, monthLength) }
+
+// ---
+
+inline fun <T : PrimeCalendar> T.goToFirstDayOfYear() =
+    apply { set(year, 0, 1) }
+
+
+inline fun <T : PrimeCalendar> T.goToLastDayOfYear() =
+    apply {
+        set(year, 11, 1)
+        set(year, month, monthLength)
+    }
 
 
 // ---

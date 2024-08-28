@@ -41,7 +41,11 @@ private data class Digit(
 
 
 @Composable
-fun TextCounter(number: Int, style: TextStyle = LocalTextStyle.current) {
+fun TextCounter(
+    number: Int,
+    style: TextStyle = LocalTextStyle.current,
+    textHandler: ((Char) -> String)? = null
+) {
 
     var oldNumber by useState(number)
     var isGoUp by useState(false)
@@ -67,7 +71,7 @@ fun TextCounter(number: Int, style: TextStyle = LocalTextStyle.current) {
 
             numberString.forEach {
 
-                TextElement(it, isGoUp, style)
+                TextElement(it, isGoUp, style, textHandler)
 
             }
         }
@@ -75,9 +79,13 @@ fun TextCounter(number: Int, style: TextStyle = LocalTextStyle.current) {
 
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-private inline fun TextElement(number: Digit, isGoUp: Boolean, style: TextStyle) {
+private inline fun TextElement(
+    number: Digit,
+    isGoUp: Boolean,
+    style: TextStyle,
+    noinline textHandler: ((Char) -> String)? = null
+) {
 
     AnimatedContent(
         number,
@@ -91,8 +99,14 @@ private inline fun TextElement(number: Digit, isGoUp: Boolean, style: TextStyle)
         }
     ) {
 
+        val handledText =
+            if (textHandler == null)
+                it.digitChar.toString()
+            else
+                textHandler(it.digitChar)
+
         Text(
-            it.digitChar.toString(),
+            handledText,
             style = style
         )
 
