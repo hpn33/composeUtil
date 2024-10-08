@@ -14,13 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import util.depend.colorPicker.ColorPickerDialog
 import util.color.Colors
 import util.color.makeRandomColor
 import util.color.util.toColorInt
 import util.color.util.toComposeColor
 import util.compose.component.base.*
 import util.compose.dialog.dialog
+import util.compose.dialog.ready.ColorPickerDialog
 import util.compose.dialog.showOverlay
 import util.compose.state.*
 import util.compose.ui.ux.size.round100p
