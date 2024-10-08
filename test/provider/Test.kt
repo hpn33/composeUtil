@@ -7,7 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import util.compose.provider.*
-import util.compose.provider.provider.Provider
+import util.service.provider.ProviderScope
+import util.service.provider.provider.Provider
+import util.service.provider.useProvider
+import util.service.provider.useProviderAccess
+import util.service.provider.useProviderLocal
 
 val indexProvider = Provider { 0 }
 val dIndexProvider = Provider {

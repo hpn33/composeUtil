@@ -1,39 +1,123 @@
 package util.compose.state
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import java.util.UUID
+import kotlin.random.Random
 
 
 @Composable
-inline fun useSignal() = remember { Signal() }.hook()
+inline fun useSignal(onReflect: () -> Unit = {}) =
+    remember { Signal() }
+
+@Composable
+inline fun useSignalSubscribe() =
+    remember { SignalSubscribe() }
+
 
 /**
  * recompose when emit signal
  */
-@JvmInline
-value class Signal(
-    val state: MutableState<Int> = mutableStateOf(0)
-) {
+class Signal {
+    val state = mutableStateOf(0)
 
+    fun reflect() {
+        var newVal = state.value
+        while (state.value == newVal) {
+            newVal = Random.nextInt(10)
+        }
 
-    fun signal() {
+        state.value = newVal
+    }
 
-        state.value++
+    @Composable
+    inline fun hook(crossinline onReflect: () -> Unit = {}) {
 
-        if (state.value > 1000)
-            state.value = 0
+        val state = remember { state }
+        var ignoreFirst by useState(true)
+
+        LaunchedEffect(state.value) {
+            if (ignoreFirst) {
+                ignoreFirst = false
+                return@LaunchedEffect
+            }
+
+            onReflect()
+        }
 
     }
 
     @Composable
-    inline fun hook(): Signal {
-        remember { state }
+    inline fun hook(key: Any?, crossinline onReflect: () -> Unit = {}) {
 
-        return this
+        val state = remember(key) { state }
+        var ignoreFirst by useState(key, true)
+
+        LaunchedEffect(key, state.value) {
+            if (ignoreFirst) {
+                ignoreFirst = false
+                return@LaunchedEffect
+            }
+
+            onReflect()
+        }
+
     }
+
+
 }
+
+class SignalSubscribe {
+    val subscriptions = mutableListOf<Pair<String, () -> Unit>>()
+
+    fun reflect() {
+        subscriptions.forEach { it.second.invoke() }
+    }
+
+    @Composable
+    inline fun hook(noinline onReflect: () -> Unit = {}) {
+
+        val subscribeKey = remember { UUID.randomUUID().toString() }
+
+
+        DisposableEffect(Unit) {
+
+            subscriptions.add(subscribeKey to onReflect)
+
+            onDispose {
+                val index = subscriptions.indexOfFirst { it.first == subscribeKey }
+
+                if (index != -1) {
+                    subscriptions.removeAt(index)
+                }
+            }
+        }
+    }
+
+
+    @Composable
+    inline fun hook(key: Any?, noinline onReflect: () -> Unit = {}) {
+
+        val subscribeKey = remember(key) { UUID.randomUUID().toString() }
+
+
+        DisposableEffect(key) {
+
+            subscriptions.add(subscribeKey to onReflect)
+
+            onDispose {
+                val index = subscriptions.indexOfFirst { it.first == subscribeKey }
+
+                if (index != -1) {
+                    subscriptions.removeAt(index)
+                }
+            }
+        }
+
+    }
+
+
+}
+
 
 //fun example() {
 //

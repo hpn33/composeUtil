@@ -60,20 +60,40 @@ inline fun <T> useFetchState(
 
 @Composable
 inline fun <T> useFetchState(
-    key: Any?,
+    state: Any?,
     initValue: T,
     crossinline function: suspend CoroutineScope.(T) -> T
 ): MutableState<T> {
 
-    val state = useState(key, initValue)
+    val stateValue = useState(initValue)
 
-    LaunchedEffect(key) {
+    LaunchedEffect(state) {
 
-        state.value = function(state.value)
+        stateValue.value = function(stateValue.value)
 
     }
 
-    return state
+    return stateValue
+}
+
+
+@Composable
+inline fun <T> useFetchState(
+    key: Any?,
+    state: Any?,
+    initValue: T,
+    crossinline function: suspend CoroutineScope.(T) -> T
+): MutableState<T> {
+
+    val stateValue = useState(key, initValue)
+
+    LaunchedEffect(key, state) {
+
+        stateValue.value = function(stateValue.value)
+
+    }
+
+    return stateValue
 }
 
 
@@ -122,6 +142,55 @@ inline fun <T> useFetchList(
     }
 
     return state
+}
+
+@Composable
+inline fun <T> useFetchListState(
+    state: Any?,
+    initValue: List<T> = listOf(),
+    crossinline function: suspend CoroutineScope.() -> List<T>
+): List<T> {
+
+    var stateValue by remember { mutableStateOf(initValue) }
+
+    LaunchedEffect(state) {
+
+        val data =
+            try {
+                function()
+            } catch (e: Exception) {
+                listOf()
+            }
+
+        stateValue = data
+    }
+
+    return stateValue
+}
+
+@Composable
+inline fun <T> useFetchListState(
+    key: Any?,
+    state: Any?,
+    initValue: List<T> = listOf(),
+    crossinline function: suspend CoroutineScope.() -> List<T>
+): List<T> {
+
+    var stateValue by remember(key) { mutableStateOf(initValue) }
+
+    LaunchedEffect(key, state) {
+
+        val data =
+            try {
+                function()
+            } catch (e: Exception) {
+                listOf()
+            }
+
+        stateValue = data
+    }
+
+    return stateValue
 }
 
 

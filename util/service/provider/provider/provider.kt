@@ -1,7 +1,8 @@
-package util.compose.provider.provider
+package util.service.provider.provider
 
-import util.compose.provider.holder.InProviderScope
-import util.compose.provider.holder.InSuspendProviderScope
+import util.service.provider.holder.InProviderScope
+import util.service.provider.holder.InProviderWatcherScope
+import util.service.provider.holder.InSuspendProviderScope
 
 // detail
 // name: provider
@@ -51,7 +52,7 @@ abstract class ProviderBase(
     override fun toString() = key
 }
 
-class Provider<T : Any?>(
+class Provider<T>(
     label: String = "",
     val watchers: List<ProviderWatch<T>> = emptyList(),
     val builder: InProviderScope.() -> T,
@@ -67,11 +68,16 @@ class SuspendProvider<T : Any?>(
 
 
 open class ProviderWatch<T>(
-    val setAction: (T) -> Unit = {},
+    val setAction: suspend InProviderWatcherScope.(T, T) -> Unit,
 //    val getAction: (T) -> Unit = {}
 )
 
-fun <T> providerWatch(
-    set: (T) -> Unit = {},
-//    get: (T) -> Unit = {}
-) = ProviderWatch(set)
+open class ProviderWatchHolder<T>(
+    val setAction: suspend (T, T) -> Unit,
+//    val getAction: (T) -> Unit = {}
+)
+
+//fun <T> providerWatch(
+//    set: (T) -> Unit = {},
+////    get: (T) -> Unit = {}
+//) = ProviderWatch(set)

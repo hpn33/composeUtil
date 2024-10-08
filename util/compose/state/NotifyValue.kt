@@ -1,55 +1,58 @@
 package util.compose.state
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 
-// Not Tested
-class NotifyValue<T : Any>(var value: T) {
+
+@Composable
+inline fun <T> useNotifyValue(value: T): NotifyValue<T> {
+    val state = remember { NotifyValue(value) }
+
+    return state
+}
+
+// TODO: Not Tested
+// TODO: Not work
+class NotifyValue<T : Any?>(var value: T) {
 
     val signal = Signal()
     val subscribe = mutableListOf<(T) -> Unit>()
 
-    val notifyState: MutableState<Int>
-        get() = signal.state
-    val notifier: Int
-        get() = notifyState.value
 
+    fun notify(value: T) {
+        this.value = value
 
-    fun notify(value: T?) {
-        value?.let { this.value = it }
-
-        signal.signal()
-        subscribe.forEach { it.invoke(this.value) }
-    }
-
-    @Composable
-    inline fun onNotify(noinline action: (T) -> Unit) {
-
-        LaunchedEffect(Unit) {
-            subscribe.add(action)
-        }
-
+        signal.reflect()
+        subscribe.forEach { it.invoke(value) }
     }
 
 
     @Composable
-    inline fun hook(): NotifyValue<T> {
-        signal.hook()
+    inline fun hook(crossinline onReflect: (T) -> Unit = {}): NotifyValue<T> {
+        signal.hook { onReflect(value) }
 
         return this
     }
 
 
-    @Composable
-    inline fun observe(crossinline action: (T) -> Unit): NotifyValue<T> {
+    fun observe(action: (T) -> Unit): NotifyValue<T> {
 
-        LaunchedEffect(notifier) {
-            action(value)
-        }
+        subscribe.add(action)
 
         return this
     }
+
+
+}
+
+
+@Composable
+fun exampleValue() {
+
+
+    val v = NotifyValue<String?>("")
+    v.observe { }
+    v.hook { }
 
 
 }

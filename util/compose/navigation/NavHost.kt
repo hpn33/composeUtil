@@ -56,17 +56,15 @@ value class NavService(
 ) {
 
     fun open(screen: ScreenWidget): Boolean {
-        if (navStack.isEmpty()) {
-            navStack.add(screen)
-            return true
+        navStack.lastOrNull()?.let {
+            if (it.title == screen.title) {
+                return false
+            }
         }
 
-        if (navStack.last().title != screen.title) {
-            navStack.add(screen)
-            return true
-        }
+        navStack.add(screen)
 
-        return false
+        return true
     }
 
     fun back(): Boolean {

@@ -32,6 +32,10 @@ class FieldFactorScope {
         fields.add("$name INTEGER NOT NULL")
     }
 
+    fun string(name: String) {
+        fields.add("$name TEXT NOT NULL")
+    }
+
     fun field(field: String) {
         fields.add(field)
     }

@@ -1,20 +1,20 @@
-package util.compose.provider
+package util.service.provider
 
 import androidx.compose.runtime.MutableState
 import util.compose.provider.holder.*
-import util.compose.provider.provider.Provider
-import util.compose.provider.provider.ProviderWatch
-import util.compose.provider.provider.SuspendProvider
+import util.service.provider.provider.Provider
+import util.service.provider.provider.ProviderWatchHolder
+import util.service.provider.provider.SuspendProvider
 import util.log.Logger.log
 import util.log.loggerLevelDown
 import util.log.loggerLevelScope
 import util.log.loggerLevelUp
+import util.service.provider.holder.*
 
 
 class ProviderService {
 
     private val providers = mutableListOf<ProviderHolder>()
-    private val providerWatch = mutableListOf<ProviderHolder>()
     private val suspendProviders = mutableListOf<SuspendProviderHolder>()
 
 
@@ -30,10 +30,23 @@ class ProviderService {
         val ref = InProviderScope(provider, this)
         val builder = { with(provider) { ref.builder() } as Any }
 
+        val refWatcher = InProviderWatcherScope(provider, this)
+        val watcherHolder =
+            provider.watchers.map { watcher ->
+
+                val action: suspend (T, T) -> Unit = { oldValue, value ->
+                    with(watcher) { refWatcher.setAction(oldValue, value) } as Any
+                }
+
+                ProviderWatchHolder(action)
+
+            } as List<ProviderWatchHolder<Any>>
+
+
         val p = ProviderHolder(
             provider.toString(),
             builder,
-            watchers = provider.watchers as List<ProviderWatch<Any>>
+            watchers = watcherHolder
         )
 
         providers.add(p)
@@ -117,12 +130,13 @@ class ProviderService {
         log("[providerService] [setState] $provider")
 
         val state = getState(provider)
+        val oldState = state.value
 
         loggerLevelUp()
 
         log("[providerService] value ${state.value}")
         state.value = value
-        watcherAction(provider, value)
+        watcherAction(provider, oldState, value)
         log("[providerService] value ${state.value}")
 
         recomputeDependents(provider.key)
@@ -131,9 +145,9 @@ class ProviderService {
 
     }
 
-    private fun <T : Any> watcherAction(value: Provider<T>, value1: T) {
+    private suspend fun <T : Any> watcherAction(provider: Provider<T>, oldValue: T, value: T) {
 
-        getHolder(value)?.watchers?.forEach { it.setAction(value1) }
+        getHolder(provider)?.watchers?.forEach { it.setAction(oldValue, value) }
 
     }
 

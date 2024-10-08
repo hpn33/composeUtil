@@ -1,9 +1,8 @@
-package composeUtil
+package util.compose.state
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import util.compose.state.Signal
 
 inline fun <T> notifyStateOf(value: T) = NotifyState(value)
 
@@ -23,12 +22,12 @@ class NotifyState<T>(var value: T) {
     fun notify(value: T?) {
         value?.let { this.value = it }
 
-        signal.signal()
+//        signal.signal()
     }
 
     @Composable
     inline fun hook(): NotifyState<T> {
-        signal.hook()
+//        signal.hook()
 
         return this
     }

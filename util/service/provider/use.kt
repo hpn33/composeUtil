@@ -1,10 +1,10 @@
-package util.compose.provider
+package util.service.provider
 
 import androidx.compose.runtime.*
 import kotlinx.coroutines.launch
-import util.compose.provider.holder.SuspendState
-import util.compose.provider.provider.Provider
-import util.compose.provider.provider.SuspendProvider
+import util.service.provider.holder.SuspendState
+import util.service.provider.provider.Provider
+import util.service.provider.provider.SuspendProvider
 import util.compose.state.useState
 import util.kot.delegate.SetGetDelegate
 import util.kot.delegate.setGetVal

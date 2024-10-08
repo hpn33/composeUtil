@@ -1,4 +1,4 @@
-package util.compose.provider
+package util.service.provider
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider

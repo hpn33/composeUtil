@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import kotlinx.coroutines.delay
-import util.compose.provider.ProviderScope
-import util.compose.provider.holder.SuspendState
-import util.compose.provider.provider.Provider
-import util.compose.provider.provider.SuspendProvider
-import util.compose.provider.useProvider
-import util.compose.provider.useProviderAccess
+import util.service.provider.ProviderScope
+import util.service.provider.holder.SuspendState
+import util.service.provider.provider.Provider
+import util.service.provider.provider.SuspendProvider
+import util.service.provider.useProvider
+import util.service.provider.useProviderAccess
 
 
 data class Todo(

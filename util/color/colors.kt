@@ -778,12 +778,8 @@ object Colors {
             200 to Color(
                 0xFFB0BEC5
             ),
-            300 to Color(
-                0xFF90A4AE
-            ),
-            400 to Color(
-                0xFF78909C
-            ),
+            300 to Color(0xFF90A4AE),
+            400 to Color(0xFF78909C),
             500 to Color(
                 _blueGreyPrimaryValue
             ),

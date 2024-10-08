@@ -9,8 +9,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import util.compose.dialog.DialogService
 import util.compose.dialog.component.DialogController
+import util.compose.dialog.dialog
 import util.compose.dialog.model.DialogWidget
+import util.compose.dialog.showOverlay
+
+
+inline fun showDialogCallback(
+    message: String,
+    dialogService: DialogService = dialog,
+    crossinline action: (Boolean) -> Unit
+) {
+    dialogService.showOverlay(QDialog(message) {
+        action(it)
+    })
+}
 
 
 class QDialog(

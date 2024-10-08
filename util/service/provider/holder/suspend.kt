@@ -1,10 +1,10 @@
-package util.compose.provider.holder
+package util.service.provider.holder
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import util.compose.provider.ProviderService
-import util.compose.provider.provider.Provider
-import util.compose.provider.provider.SuspendProvider
+import util.service.provider.ProviderService
+import util.service.provider.provider.Provider
+import util.service.provider.provider.SuspendProvider
 import util.log.Logger.log
 import util.log.loggerLevelDown
 import util.log.loggerLevelScope
