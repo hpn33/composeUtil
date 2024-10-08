@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import hpn.routine.ui.dialog.colorPicker.ColorPickerDialog
+import util.depend.colorPicker.ColorPickerDialog
 import util.color.Colors
 import util.color.makeRandomColor
 import util.color.util.toColorInt
