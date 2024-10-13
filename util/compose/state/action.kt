@@ -8,8 +8,8 @@ import kotlinx.coroutines.CoroutineScope
 
 
 @Composable
-inline fun firstTimeEffect(crossinline action: suspend CoroutineScope.() -> Unit) {
-    LaunchedEffect(Unit) {
+inline fun firstTimeEffect(key: Any? = Unit, crossinline action: suspend CoroutineScope.() -> Unit) {
+    LaunchedEffect(key) {
         action()
     }
 }

@@ -14,3 +14,10 @@ fun BackButton(navService: NavService? = null) {
         Icon(Icons.Default.ArrowBack, contentDescription = "Back to previous view")
     }
 }
+
+@Composable
+fun BackButton(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(Icons.Default.ArrowBack, contentDescription = "Back to previous view")
+    }
+}
