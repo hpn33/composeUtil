@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import util.compose.dialog.component.DialogController
+import util.compose.dialog.component.DialogOverlayBase
 import util.compose.dialog.model.DialogWidget
 
 // TODO: not work
@@ -17,20 +18,23 @@ class MenuDialog(val itemList: List<MenuItem>) : DialogWidget() {
     override fun content(controller: DialogController) {
 
 
-        Surface {
 
-            Column {
+        DialogOverlayBase {
+            Surface {
 
-                itemList.forEach {
+                Column {
 
-                    Box(Modifier.clickable(onClick = it.action)) {
-                        Text(it.title)
+                    itemList.forEach {
+
+                        Box(Modifier.clickable(onClick = it.action)) {
+                            Text(it.title)
+                        }
+
+
                     }
-
-
                 }
-            }
 
+            }
         }
 
 

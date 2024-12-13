@@ -11,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import util.compose.dialog.DialogService
 import util.compose.dialog.component.DialogController
+import util.compose.dialog.component.DialogOverlayBase
 import util.compose.dialog.dialog
 import util.compose.dialog.model.DialogWidget
 import util.compose.dialog.showOverlay
@@ -35,14 +36,17 @@ class QDialog(
 
     @Composable
     override fun content(controller: DialogController) =
-        Surface(
-            elevation = 6.dp,
-            modifier = Modifier.width(350.dp)
-        ) {
 
-            MessageView(message, modifier) {
-                controller.close()
-                act(it)
+        DialogOverlayBase {
+            Surface(
+                elevation = 6.dp,
+                modifier = Modifier.width(350.dp)
+            ) {
+
+                MessageView(message, modifier) {
+                    controller.close()
+                    act(it)
+                }
             }
         }
 

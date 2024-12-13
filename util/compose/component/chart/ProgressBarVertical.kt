@@ -2,7 +2,6 @@ package util.compose.component.chart
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,10 +26,10 @@ private inline fun ColumnScope.fillWidget(value: Float, noinline content: @Compo
 
 
 @Composable
-fun VerticalProgressBarSimple(
+fun ProgressBarVerticalSimple(
     value: Float = 0f,
     maxValue: Float = 1f,
-    width: Int = 10,
+    thickness: Int = 10,
     reverse: Boolean = false,
 ) {
 
@@ -39,7 +38,7 @@ fun VerticalProgressBarSimple(
 
 
     Column(
-        Modifier.background(Colors.grey.default.copy(.2f), round5d).fillMaxHeight().width(width.dp)
+        Modifier.background(Colors.grey.default.copy(.2f), round5d).fillMaxHeight().width(thickness.dp)
     ) {
 
 
@@ -63,7 +62,7 @@ fun VerticalProgressBarSimple(
 
 
 @Composable
-fun VerticalProgressBar(
+fun ProgressBarVertical(
     value: Float = 0f,
     maxValue: Float = 1f,
     background: Color = Colors.grey.default.copy(.2f),
@@ -98,10 +97,10 @@ fun VerticalProgressBar(
 
 
 @Composable
-fun VerticalProgressBarWithContent(
+fun ProgressBarVerticalWithContent(
     value: Float = 0f,
     maxValue: Float = 1f,
-    width: Int = 10,
+    thickness: Int = 10,
     background: Color = Colors.grey.default.copy(.2f),
     color: Color = Colors.blue.default,
     shape: Shape = round5d,
@@ -114,7 +113,7 @@ fun VerticalProgressBarWithContent(
 
 
     Column(
-        Modifier.background(background, shape).fillMaxHeight().width(width.dp)
+        Modifier.background(background, shape).fillMaxHeight().width(thickness.dp)
     ) {
 
 

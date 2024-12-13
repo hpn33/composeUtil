@@ -87,11 +87,11 @@ fun DialogOverlayWidget.show() {
 //        onKeyEvent = { false }
     ) {
 
-        DialogOverlayBase {
+//        DialogOverlayBase {
 
             content(controller)
 
-        }
+//        }
 
     }
 

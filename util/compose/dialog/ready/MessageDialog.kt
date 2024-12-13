@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import util.compose.dialog.component.DialogController
+import util.compose.dialog.component.DialogOverlayBase
 import util.compose.dialog.model.DialogWidget
 
 
@@ -19,10 +20,13 @@ class MessageDialog(
 
     @Composable
     override fun content(controller: DialogController) =
-        Box(Modifier.width(350.dp)) {
-            MessageView(message) {
-                controller.close()
-                act()
+
+        DialogOverlayBase {
+            Box(Modifier.width(350.dp)) {
+                MessageView(message) {
+                    controller.close()
+                    act()
+                }
             }
         }
 }

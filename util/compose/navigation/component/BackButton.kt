@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import util.compose.navigation.NavService
+import util.compose.navigation.NavStackService
 import util.compose.navigation.nav
 
 @Composable
@@ -16,8 +17,8 @@ fun BackButton(navService: NavService? = null) {
 }
 
 @Composable
-fun BackButton(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
+fun BackButton(navService: NavStackService) {
+    IconButton(onClick = { navService.back() }) {
         Icon(Icons.Default.ArrowBack, contentDescription = "Back to previous view")
     }
 }
