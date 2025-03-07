@@ -1,7 +1,7 @@
-package org.example.util
+package util
 
-import org.example.core.ast.LElement
-import org.example.core.ast.LElementScope
+//import org.example.core.ast.LElement
+//import org.example.core.ast.LElementScope
 
 
 //fun Any.println() = println(this)
@@ -14,15 +14,15 @@ fun <T> List<T>.alsoPrintList() = onEach { println(it) }
 fun <T, R> Map<T, R>.alsoPrintList() = onEach { println(it) }
 
 
-fun List<LElement>.printList() = forEach { it.println() }
-fun LElement.println() {
-//    println("${this::class.simpleName}(${this.key}) ${this.children.size} children")
-    val childInfo =
-        if (this is LElementScope) "(${this.children.size} children)" else ""
-
-//    println("${this.key} <<${this::class.simpleName}>> $childInfo")
-    println("${this.key} $childInfo")
-
-    this.children.printList()
-
-}
+//fun List<LElement>.printList() = forEach { it.println() }
+//fun LElement.println() {
+////    println("${this::class.simpleName}(${this.key}) ${this.children.size} children")
+//    val childInfo =
+//        if (this is LElementScope) "(${this.children.size} children)" else ""
+//
+////    println("${this.key} <<${this::class.simpleName}>> $childInfo")
+//    println("${this.key} $childInfo")
+//
+//    this.children.printList()
+//
+//}
