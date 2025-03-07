@@ -1,4 +1,4 @@
-package util.service.signal
+package util.tool.signal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

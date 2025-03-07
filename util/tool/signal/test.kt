@@ -1,4 +1,4 @@
-package util.service.signal
+package util.tool.signal
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

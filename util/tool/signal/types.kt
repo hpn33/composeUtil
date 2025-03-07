@@ -1,4 +1,4 @@
-package util.service.signal
+package util.tool.signal
 
 class SignalKey<T> {
     val key: String
