@@ -1,4 +1,4 @@
-package util.benchmark
+package util.tool.benchmark
 
 import util.dateUtil.date.kotlinx.nowX
 import util.dateUtil.date.kotlinx.toLocalTimeX

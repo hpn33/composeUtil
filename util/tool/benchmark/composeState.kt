@@ -1,4 +1,4 @@
-package util.benchmark
+package util.tool.benchmark
 
 import androidx.compose.runtime.*
 import util.compose.state.useState
@@ -44,31 +44,13 @@ inline fun rememberDebugStateCounter(
 
 
 @Composable
-inline fun rememberDebugStateCounter(tag: String = "recompose", message: String = "", useTab: Boolean = false) {
+inline fun rememberDebugStateCounter(
+    tag: String = "recompose",
+    message: String = "",
+    useTab: Boolean = false
+) {
 
-    val tabLevel = remember {
-        if (useTab) {
-            tabLevelGlobal = 0
-        }
-
-        if (!useTab && tabLevelGlobal != -1) {
-            tabLevelGlobal += 1
-        }
-
-        tabLevelGlobal
-    }
-
-    val tab = remember {
-        if (tabLevel == -1)
-            ""
-        else
-            List(tabLevel) { " " }.joinToString("") { it }
-    }
-
-    val counter = remember { DebugCount() }
-    counter.c += 1
-
-    println("$tab$tag: ${counter.c} :$message")
+    rememberDebugStateCounter(Unit, tag, message, useTab)
 
 }
 
