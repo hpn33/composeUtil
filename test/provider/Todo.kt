@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import kotlinx.coroutines.delay
-import util.service.provider.ProviderScope
-import util.service.provider.holder.SuspendState
-import util.service.provider.provider.Provider
-import util.service.provider.provider.SuspendProvider
-import util.service.provider.useProvider
-import util.service.provider.useProviderAccess
+import util.tool.provider.ProviderScope
+import util.tool.provider.provider.suspend.SuspendState
+import util.tool.provider.provider.normal.Provider
+import util.tool.provider.provider.suspend.ProviderSuspend
+import util.tool.provider.use.useProvider
+import util.tool.provider.use.useProviderAccess
 
 
 data class Todo(
@@ -41,7 +41,7 @@ val filterProvider = Provider("filter") { TodoFilter.All }
 
 val searchProvider = Provider("search") { "" }
 
-val todosFilteredProvider = SuspendProvider("filtered") {
+val todosFilteredProvider = ProviderSuspend("filtered") {
 
     val filter = get(filterProvider)
     val todos = get(todosProvider)
@@ -57,7 +57,7 @@ val todosFilteredProvider = SuspendProvider("filtered") {
 
 }
 
-val todosSearchedProvider = SuspendProvider("searched") {
+val todosSearchedProvider = ProviderSuspend("searched") {
 
     val searchInput = get(searchProvider)
     val filteredList = get(todosFilteredProvider)
@@ -80,7 +80,7 @@ val todosSearchedProvider = SuspendProvider("searched") {
 }
 
 
-val todosFinalProvider = SuspendProvider<List<Todo>?>("final") {
+val todosFinalProvider = ProviderSuspend<List<Todo>?>("final") {
 
     val a = get(todosSearchedProvider)
 
@@ -174,7 +174,7 @@ fun ProviderTodoView() {
 
 
 
-            ShowList()
+//            ShowList()
         }
 
         println("------------ main end")
@@ -199,69 +199,69 @@ fun SearchBox(modifier: Modifier = Modifier) {
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun ShowList() {
-
-    println("------------ showList")
-
-    var todos by useProviderAccess(todosProvider)
-    val todosFinal by useProvider(todosFinalProvider)
-
-    LazyColumn {
-
-        todosFinal
-            .on(
-                error = { item { Text("notLoda..d :${it}") } },
-                loading = { item { CircularProgressIndicator() } }
-            ) { data ->
-
-                if (data == null) {
-                    item {
-
-                        Text("is null")
-                    }
-
-                    return@LazyColumn
-                }
-
-
-                if (data.isEmpty()) {
-                    item {
-
-                        Text("Empty")
-                    }
-
-                    return@LazyColumn
-                }
-
-
-                items(data) {
-
-                    Box(
-                        Modifier.alpha(if (it.check) .5f else 1f)
-                    ) {
-
-                        Card({
-
-                            val newTodo = it.copy(check = !it.check)
-
-                            val newList = buildList {
-
-                                addAll(data.filterNot { i -> i == it })
-
-                                add(newTodo)
-                            }
-
-                            todos = newList
-
-                        }) {
-                            Text(it.title)
-                        }
-                    }
-
-                }
-            }
-
-    }
-}
+//@OptIn(ExperimentalMaterialApi::class)
+//@Composable
+//fun ShowList() {
+//
+//    println("------------ showList")
+//
+//    var todos by useProviderAccess(todosProvider)
+//    val todosFinal = useProvider(todosFinalProvider)
+//
+//    LazyColumn {
+//
+//        todosFinal
+//            .on(
+//                error = { item { Text("notLoda..d :${it}") } },
+//                loading = { item { CircularProgressIndicator() } }
+//            ) { data ->
+//
+//                if (data == null) {
+//                    item {
+//
+//                        Text("is null")
+//                    }
+//
+//                    return@LazyColumn
+//                }
+//
+//
+//                if (data.isEmpty()) {
+//                    item {
+//
+//                        Text("Empty")
+//                    }
+//
+//                    return@LazyColumn
+//                }
+//
+//
+//                items(data) {
+//
+//                    Box(
+//                        Modifier.alpha(if (it.check) .5f else 1f)
+//                    ) {
+//
+//                        Card({
+//
+//                            val newTodo = it.copy(check = !it.check)
+//
+//                            val newList = buildList {
+//
+//                                addAll(data.filterNot { i -> i == it })
+//
+//                                add(newTodo)
+//                            }
+//
+//                            todos = newList
+//
+//                        }) {
+//                            Text(it.title)
+//                        }
+//                    }
+//
+//                }
+//            }
+//
+//    }
+//}
