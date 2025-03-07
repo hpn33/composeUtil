@@ -38,7 +38,8 @@ fun ProgressBarVerticalSimple(
 
 
     Column(
-        Modifier.background(Colors.grey.default.copy(.2f), round5d).fillMaxHeight().width(thickness.dp)
+        Modifier.background(Colors.grey.default.copy(.2f), round5d).fillMaxHeight()
+            .width(thickness.dp)
     ) {
 
 
@@ -65,10 +66,11 @@ fun ProgressBarVerticalSimple(
 fun ProgressBarVertical(
     value: Float = 0f,
     maxValue: Float = 1f,
+    thickness: Int = 10,
     background: Color = Colors.grey.default.copy(.2f),
     color: Color = Colors.blue.default,
     shape: Shape = round5d,
-    reverse: Boolean = false
+    reverse: Boolean = false,
 ) {
 
     val fill = value
@@ -76,7 +78,42 @@ fun ProgressBarVertical(
 
 
     Column(
-        Modifier.background(background, shape).fillMaxHeight().width(10.dp)
+        Modifier.background(background, shape).fillMaxHeight().width(thickness.dp)
+    ) {
+
+        if (reverse) {
+            fillWidget(fill) {
+                Box(Modifier.background(color, shape).fillMaxSize())
+            }
+            emptyWidget(empty)
+
+        } else {
+
+            emptyWidget(empty)
+            fillWidget(fill) {
+                Box(Modifier.background(color, shape).fillMaxSize())
+            }
+        }
+    }
+}
+
+@Composable
+fun ProgressBarVerticalWithSize(
+    value: Float = 0f,
+    maxValue: Float = 1f,
+    background: Color = Colors.grey.default.copy(.2f),
+    color: Color = Colors.blue.default,
+    shape: Shape = round5d,
+    reverse: Boolean = false,
+    modifier: Modifier = Modifier,
+) {
+
+    val fill = value
+    val empty = maxValue - value
+
+
+    Column(
+        modifier.background(background, shape)
     ) {
 
         if (reverse) {
@@ -105,7 +142,7 @@ fun ProgressBarVerticalWithContent(
     color: Color = Colors.blue.default,
     shape: Shape = round5d,
     reverse: Boolean = false,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
 
     val fill = value

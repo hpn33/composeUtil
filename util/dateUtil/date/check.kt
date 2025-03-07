@@ -5,9 +5,11 @@ import kotlinx.datetime.LocalDateTime
 import util.dateUtil.date.kotlinx.nowLocalDateX
 import util.dateUtil.date.kotlinx.nowX
 import util.dateUtil.date.kotlinx.toLocalDateX
+import util.dateUtil.date.prime.goToFirstOfWeek
 import util.dateUtil.date.prime.goToNextDay
 import util.dateUtil.date.prime.goToPrevDay
 import util.dateUtil.date.prime.toLocalDateX
+import util.dateUtil.date.prime.toPersian
 import util.dateUtil.date.prime.toPrimeCivil
 
 
@@ -31,16 +33,26 @@ inline val LocalDate.isBeforeToday
     get() = this < nowLocalDateX()
 
 
+inline fun LocalDate.isBeforeDate(target: LocalDate) =
+    this < target
+
+
 inline val LocalDateTime.isToday
     get() = this.toLocalDateX().isToday
 inline val LocalDate.isToday
     get() = this == nowLocalDateX()
+
+inline fun LocalDate.isSameDate(target: LocalDate) =
+    this == target
 
 
 inline val LocalDateTime.isAfterToday
     get() = this.toLocalDateX().isAfterToday
 inline val LocalDate.isAfterToday
     get() = this > nowLocalDateX()
+
+inline fun LocalDate.isAfterDate(target: LocalDate) =
+    this > target
 
 
 inline val LocalDateTime.isTodayOrAfter
@@ -49,11 +61,17 @@ inline val LocalDate.isTodayOrAfter
     get() = this.isToday || this.isAfterToday
 
 
+inline fun LocalDate.isTodayOrAfter(target: LocalDate) =
+    this.isSameDate(target) || this.isAfterDate(target)
+
+
 inline val LocalDateTime.isTodayOrBefore
     get() = this.toLocalDateX().isTodayOrAfter
 inline val LocalDate.isTodayOrBefore
     get() = this.isToday || this.isBeforeToday
 
+inline fun LocalDate.isTodayOrBefore(target: LocalDate) =
+    this.isSameDate(target) || this.isBeforeDate(target)
 
 inline val LocalDateTime.isYesterday
     get() = this.toLocalDateX().isYesterday
@@ -93,5 +111,13 @@ inline fun LocalDate.isTomorrowOf(date: LocalDate) =
     this == date.toPrimeCivil().goToNextDay().toLocalDateX()
 
 
+// ---------------------
 
+inline val LocalDateTime.isThisWeek
+    get() = this.toLocalDateX().isThisWeek
+inline val LocalDate.isThisWeek: Boolean
+    get() {
 
+        return this.toPersian().goToFirstOfWeek().timeInMillis ==
+                nowX().toPersian().goToFirstOfWeek().timeInMillis
+    }

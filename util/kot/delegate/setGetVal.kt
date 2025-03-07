@@ -2,13 +2,13 @@ package util.kot.delegate
 
 import kotlin.reflect.KProperty
 
-inline fun <T : Any?> setGetVal(
+inline fun <T> setGetVal(
     noinline set: (T) -> Unit = {},
     noinline get: () -> T
 ) =
     SetGetDelegate(set, get)
 
-class SetGetDelegate<T : Any?>(
+class SetGetDelegate<T>(
     val set: (T) -> Unit,
     val get: () -> T,
 ) {

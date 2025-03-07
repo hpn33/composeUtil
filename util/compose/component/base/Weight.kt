@@ -9,9 +9,10 @@ import androidx.compose.ui.Modifier
 @Composable
 fun RowScope.Weight(weight: Float = 1f, content: @Composable () -> Unit = {}) {
 
-    Box(Modifier.weight(weight)) {
-        content()
-    }
+    if (weight != 0f)
+        Box(Modifier.weight(weight)) {
+            content()
+        }
 
 }
 
@@ -30,9 +31,10 @@ fun RowScope.WeightCenter(weight: Float = 1f, content: @Composable () -> Unit) {
 @Composable
 fun ColumnScope.Weight(weight: Float = 1f, content: @Composable () -> Unit = {}) {
 
-    Box(Modifier.weight(weight)) {
-        content()
-    }
+    if (weight != 0f)
+        Box(Modifier.weight(weight)) {
+            content()
+        }
 
 }
 

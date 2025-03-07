@@ -32,33 +32,13 @@ fun <T> List<T>.remove(find: (T) -> Boolean): List<T> {
     return newList
 }
 
-fun <T> List<T>.removeAt(index: Int): List<T> {
 
-    if (index < 0) {
-        throw IndexOutOfBoundsException("Index $index is out of bounds")
-    }
-
-    if (index >= size) {
-        throw IndexOutOfBoundsException("Index $index is out of bounds")
-    }
-
-    val newList = buildList {
-
-        addAll(this@removeAt)
-
-        removeAt(index)
-    }
-
-    return newList
-}
-
-
-fun <T> List<T>.update(findFirst: (T) -> Boolean, itemBuilder: (T?) -> T?): List<T> {
+fun <T> List<T>.update(findFirst: (T) -> Boolean, itemBuilder: (T) -> T): List<T> {
 
     val existIndex = indexOfFirst(findFirst)
     val newItem =
         if (existIndex == -1) {
-            itemBuilder(null)
+            null
         } else
             itemBuilder(this[existIndex])
 
@@ -71,40 +51,10 @@ fun <T> List<T>.update(findFirst: (T) -> Boolean, itemBuilder: (T?) -> T?): List
 
             addAll(this@update)
 
-            if (existIndex != -1) {
-                removeAt(existIndex)
-                add(existIndex, newItem)
-            }
-        }
-
-
-    return newList
-}
-
-fun <T> List<T>.updateAt(index: Int, itemBuilder: (T?) -> T?): List<T> {
-
-
-    if (index < 0) {
-        throw IndexOutOfBoundsException("Index $index is out of bounds")
-    }
-
-    if (index >= size) {
-        throw IndexOutOfBoundsException("Index $index is out of bounds")
-    }
-
-
-    val newItem = itemBuilder(this[index])
-    if (newItem == null) {
-        return this
-    }
-
-    val newList =
-        buildList {
-
-            addAll(this@updateAt)
-
-            removeAt(index)
-            add(index, newItem)
+//            if (existIndex != -1) {
+            removeAt(existIndex)
+            add(existIndex, newItem)
+//            }
         }
 
 
@@ -115,7 +65,6 @@ fun <T> List<T>.updateAt(index: Int, itemBuilder: (T?) -> T?): List<T> {
 fun <T> List<T>.updateOrInsert(findFirst: (T) -> Boolean, itemBuilder: (T?) -> T?): List<T> {
 
     val existIndex = indexOfFirst(findFirst)
-    println(existIndex)
     val newItem =
         if (existIndex == -1) {
             itemBuilder(null)
